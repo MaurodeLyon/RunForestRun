@@ -47,7 +47,7 @@ namespace RunForestRun.View
                 var pos = new Geopoint(d.Coordinate.Point.Position);
 
 
-                await map.TrySetViewAsync(pos,50);
+                await map.TrySetViewAsync(pos,15);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace RunForestRun.View
                 var pos = new Geopoint(d.Coordinate.Point.Position);
 
 
-                await map.TrySetViewAsync(pos,50);
+                await map.TrySetViewAsync(pos,15);
                 geolocator = null;
             }
         }
@@ -72,7 +72,7 @@ namespace RunForestRun.View
         //    DrawCarIcon(pos);
 
 
-        //    await MyMap.TrySetViewAsync(pos, MyMap.ZoomLevel, …);
+        //    await MyMap.TrySetViewAsync(pos, MyMap.ZoomLevel);
         //}
 
     }
