@@ -98,6 +98,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Library\FileIO.cs" />
+    <Compile Include="Model\DataHandler.cs" />
+    <Compile Include="ViewModel\Controller.cs" />
     <Compile Include="View\Compare.xaml.cs">
       <DependentUpon>Compare.xaml</DependentUpon>
     </Compile>
