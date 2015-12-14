@@ -26,6 +26,8 @@ namespace RunForestRun
         public MainPage()
         {
             this.InitializeComponent();
+            PageName.Text = "Map";
+            myFrame.Navigate(typeof(Map));
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
