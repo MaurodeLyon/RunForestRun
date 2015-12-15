@@ -20,22 +20,11 @@ namespace RunForestRun.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Map : Page
+    public sealed partial class Info : Page
     {
-        public Map()
+        public Info()
         {
             this.InitializeComponent();
-            mapFrame.Navigate(typeof(GPS));
-        }
-
-        private void Kaart_Click(object sender, RoutedEventArgs e)
-        {
-            mapFrame.Navigate(typeof(GPS));
-        }
-
-        private void Info_Click(object sender, RoutedEventArgs e)
-        {
-            mapFrame.Navigate(typeof(Info));
         }
     }
 }

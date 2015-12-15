@@ -100,9 +100,16 @@
     </Compile>
     <Compile Include="Library\FileIO.cs" />
     <Compile Include="Model\DataHandler.cs" />
+    <Compile Include="Model\Route.cs" />
     <Compile Include="ViewModel\Controller.cs" />
     <Compile Include="View\Compare.xaml.cs">
       <DependentUpon>Compare.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GPS.xaml.cs">
+      <DependentUpon>GPS.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Info.xaml.cs">
+      <DependentUpon>Info.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Load.xaml.cs">
       <DependentUpon>Load.xaml</DependentUpon>
@@ -122,6 +129,7 @@
     <None Include="RunForestRun_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\YOLO.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -137,6 +145,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="View\Compare.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\GPS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Info.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
