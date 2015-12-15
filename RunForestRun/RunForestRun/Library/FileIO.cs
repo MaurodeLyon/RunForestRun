@@ -12,29 +12,19 @@ namespace RunForestRun.Library
 {
     class FileIO
     {
-        public static async void Save(String filename, String contents)
+        public static async void Save(string filename, string contents)
         {
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
             Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync(filename+ ".data", Windows.Storage.CreationCollisionOption.ReplaceExisting);
-
             await Windows.Storage.FileIO.WriteTextAsync(sampleFile, contents);
-
         }
 
-        public static async Task<string> Load(String filename)
+        public static async Task<string> Load(string filename)
         {
-
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
             Windows.Storage.StorageFile sampleFile = await storageFolder.GetFileAsync("sample.txt");
-
             String contents = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
-
             return contents;
-
-
         }
-
     }
 }
