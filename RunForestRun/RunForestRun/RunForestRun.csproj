@@ -105,10 +105,10 @@
     <Compile Include="View\Compare.xaml.cs">
       <DependentUpon>Compare.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\GPS.xaml.cs">
+    <Compile Include="View\Map\GPS.xaml.cs">
       <DependentUpon>GPS.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Info.xaml.cs">
+    <Compile Include="View\Map\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Load.xaml.cs">
@@ -118,7 +118,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\Map.xaml.cs">
+    <Compile Include="View\Map\Map.xaml.cs">
       <DependentUpon>Map.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -148,11 +148,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\GPS.xaml">
+    <Page Include="View\Map\GPS.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Info.xaml">
+    <Page Include="View\Map\Info.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,7 +164,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Map.xaml">
+    <Page Include="View\Map\Map.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -44,8 +44,8 @@ namespace RunForestRun
             }
             else if (Save.IsSelected)
             {
-                PageName.Text = "Save/Load";
-                myFrame.Navigate(typeof(MainPage));
+                PageName.Text = "Load";
+                myFrame.Navigate(typeof(Load));
             }
             else if (Compare.IsSelected)
             {

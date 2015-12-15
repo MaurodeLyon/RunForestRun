@@ -26,5 +26,10 @@ namespace RunForestRun.View
         {
             this.InitializeComponent();
         }
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
