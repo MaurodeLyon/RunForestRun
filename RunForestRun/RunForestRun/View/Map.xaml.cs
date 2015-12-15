@@ -54,7 +54,7 @@ namespace RunForestRun.View
                 mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
                 mapIcon1.Title = "Lindelauf BV";
                 mapIcon1.ZIndex = 0;
-
+                
                 map.MapElements.Add(mapIcon1);
 
                 double centerLatitude = d.Coordinate.Latitude;
@@ -89,12 +89,15 @@ namespace RunForestRun.View
                 await map.TrySetViewAsync(pos,15);
                 geolocator = null;
             }
+
+            
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             const string beginLocation = "Geertruidenberg";
-            const string endLocation = "Granville, Manche, Frankrijk";
+            const string endLocation= "Moskou, Russische Federatie";
+                //"Granville, Manche, Frankrijk";
             
             MapLocationFinderResult result
                 = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
@@ -103,7 +106,14 @@ namespace RunForestRun.View
             result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
             MapLocation to = result.Locations.First();
 
-           
+            MapIcon mapIcon1 = new MapIcon();
+
+            mapIcon1.Location = new Geopoint(to.Point.Position);
+            mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            mapIcon1.Title = "Lindelauf BV (Supported by Putin)";
+            mapIcon1.ZIndex = 0;
+            map.MapElements.Add(mapIcon1);
+
             MapRouteFinderResult routeResult
                 = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
 
@@ -126,6 +136,17 @@ namespace RunForestRun.View
 
 
 
+
+        }
+
+        private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(
+                "Aliquam laoreet magna sit amet mauris iaculis ornare. " +
+                "Morbi iaculis augue vel elementum volutpat.",
+                "Lorem Ipsum");
+            
+            var result = await dialog.ShowAsync();
 
         }
 
