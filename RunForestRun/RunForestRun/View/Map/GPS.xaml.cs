@@ -24,16 +24,25 @@ namespace RunForestRun.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Map : Page
+    public sealed partial class GPS : Page
     {
         private Geolocator geolocator;
-
-        public Map()
+        public GPS()
         {
             this.InitializeComponent();
+            test();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void test()
+        {
+            Geolocator locator = new Geolocator();
+            Geoposition position = await locator.GetGeopositionAsync();
+            Geocoordinate coordinate = position.Coordinate;
+            Geopoint point = coordinate.Point;
+            BasicGeoposition basic = point.Position;
+        }
+
+        private async void Center_Click(object sender, RoutedEventArgs e)
         {
             if (geolocator == null)
             {
@@ -44,7 +53,7 @@ namespace RunForestRun.View
                 };
                 //geolocator.PositionChanged += GeolocatorPositionChanged;
                 //GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
-                
+
                 Geoposition d = await geolocator.GetGeopositionAsync();
 
                 var pos = new Geopoint(d.Coordinate.Point.Position);
@@ -75,7 +84,7 @@ namespace RunForestRun.View
                 mapPolygon.StrokeDashed = false;
                 map.MapElements.Add(mapPolygon);
 
-                await map.TrySetViewAsync(pos,15);
+                await map.TrySetViewAsync(pos, 15);
             }
             else
             {
@@ -85,7 +94,6 @@ namespace RunForestRun.View
 
                 var pos = new Geopoint(d.Coordinate.Point.Position);
 
-            
                 await map.TrySetViewAsync(pos,15);
                 geolocator = null;
             }
@@ -133,10 +141,6 @@ namespace RunForestRun.View
             line.Path = new Geopath(b.Path.Positions);
 
             map.MapElements.Add(line);
-
-
-
-
         }
 
         private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
@@ -161,7 +165,5 @@ namespace RunForestRun.View
 
         //    await MyMap.TrySetViewAsync(pos, MyMap.ZoomLevel);
         //}
-
     }
 }
-

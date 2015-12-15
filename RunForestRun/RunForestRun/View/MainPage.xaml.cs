@@ -26,6 +26,8 @@ namespace RunForestRun
         public MainPage()
         {
             this.InitializeComponent();
+            PageName.Text = "Map";
+            myFrame.Navigate(typeof(Map));
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -42,8 +44,8 @@ namespace RunForestRun
             }
             else if (Save.IsSelected)
             {
-                PageName.Text = "Save/Load";
-                myFrame.Navigate(typeof(MainPage));
+                PageName.Text = "Load";
+                myFrame.Navigate(typeof(Load));
             }
             else if (Compare.IsSelected)
             {

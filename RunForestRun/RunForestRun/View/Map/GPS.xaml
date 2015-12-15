@@ -5,14 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
-    x:Class="RunForestRun.View.Map"
+    x:Class="RunForestRun.View.GPS"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Maps:MapControl x:Name="map" Grid.Row="0" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                         ZoomInteractionMode="GestureAndControl" TiltInteractionMode="GestureAndControl" MapElementClick="map_MapElementClick"/>
-        <Button Content="CURRENT LOC" Height="30" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="Button_Click" />
+        <Maps:MapControl x:Name="map" Grid.Row="0" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Button Name="Center" FontFamily="Segoe MDL2 Assets"  Content="&#xE81D;" FontSize ="36" Click="Center_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
         <Button Content="TestRoute" Height="30" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click_1" />
-    
     </Grid>
 </Page>

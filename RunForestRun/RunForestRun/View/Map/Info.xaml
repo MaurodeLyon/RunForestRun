@@ -1,0 +1,75 @@
+﻿<Page
+    x:Class="RunForestRun.View.Info"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RunForestRun.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" BorderThickness="5">
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Tijd" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Name="Tijd" Text="11:11" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="TijdEenheid"  Text="mm:ss" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="5">
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Afstand" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Name="Afstand" Text="33" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="AfstandEenheid"  Text="Km" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="5">
+            <Grid Grid.Row="1" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Snelheid" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Name="Snelheid" Text="33" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="SnelheidEenheid"  Text="m/s" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="5">
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Tempo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Name="Tempo" Text="7:77" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="TempoEenheid"  Text="min/km" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>
