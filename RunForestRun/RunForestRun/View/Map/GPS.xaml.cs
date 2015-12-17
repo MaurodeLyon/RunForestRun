@@ -29,10 +29,13 @@ namespace RunForestRun.View
     {
         private Geolocator geolocator;
         private MapIcon mapIcon1;
+        private List<Geopoint> walkedRoute;
+        private MapPolyline walkedLine;
 
         public GPS()
         {
             this.InitializeComponent();
+            walkedRoute = new List<Geopoint>();
             //test();
         }
 
@@ -106,12 +109,49 @@ namespace RunForestRun.View
             });
 
             await map.TrySetViewAsync(pos, 17);
+
+            walkedRoute.Add(pos);
+
+            if (walkedRoute.Count >= 2)
+            {
+                if (walkedLine != null)
+                {
+                    map.MapElements.Remove(walkedLine);
+                }
+
+
+                MapRouteFinderResult routeResult
+                   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
+
+                MapRoute b = routeResult.Route;
+
+                var color = Colors.Green;
+                color.A = 128;
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    walkedLine = new MapPolyline
+                    {
+                        StrokeThickness = 11,
+                        StrokeColor = color,
+                        StrokeDashed = false,
+                        ZIndex = 2
+
+                    };
+                    walkedLine.Path = new Geopath(b.Path.Positions);
+
+                    map.MapElements.Add(walkedLine);
+                });
+                
+
+                
+
+            }
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             const string beginLocation = "Geertruidenberg";
-            const string endLocation= "Moskou, Russische Federatie";
+            const string endLocation= "Breda";
                 //"Granville, Manche, Frankrijk";
             
             MapLocationFinderResult result
@@ -131,7 +171,7 @@ namespace RunForestRun.View
 
             MapRouteFinderResult routeResult
                 = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
-
+            
             MapRoute b = routeResult.Route;
 
             var color = Colors.Green;
