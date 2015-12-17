@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Background;
 using Windows.Devices.Geolocation;
+using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Maps;
@@ -30,13 +32,45 @@ namespace RunForestRun.View
         private Geolocator geolocator;
         private MapIcon mapIcon1;
         private List<Geopoint> walkedRoute;
-        private MapPolyline walkedLine;
+        private MapPolyline LatestwalkedLine;
+        private int trigger = 0;
 
         public GPS()
         {
             this.InitializeComponent();
             walkedRoute = new List<Geopoint>();
             //test();
+            geoFencing();
+        }
+
+        private async void geoFencing()
+        {
+            Geolocator locator = new Geolocator();
+
+            var location = await locator.GetGeopositionAsync().AsTask();
+
+            
+
+            Geofence fence
+             = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
+
+            if (fence == null)
+            {
+                GeofenceMonitor.Current.Geofences.Add(
+                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 50.0), MonitoredGeofenceStates.Entered,
+                                    false, TimeSpan.FromSeconds(10))
+                        );
+            }
+
+
+
+
+            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
+        }
+
+        private void GeofenceStateChanged(GeofenceMonitor sender, object args)
+        {
+            throw new NotImplementedException();
         }
 
         private async void test()
@@ -100,8 +134,9 @@ namespace RunForestRun.View
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
+            trigger++;
             Geoposition d = await geolocator.GetGeopositionAsync();
-
+            
             var pos = new Geopoint(d.Coordinate.Point.Position);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -114,22 +149,19 @@ namespace RunForestRun.View
 
             if (walkedRoute.Count >= 2)
             {
-                if (walkedLine != null)
-                {
-                    map.MapElements.Remove(walkedLine);
-                }
+                trigger = 0;
 
+                //MapRouteFinderResult routeResult
+                //   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
 
-                MapRouteFinderResult routeResult
-                   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
+                //MapRoute b = routeResult.Route;
 
-                MapRoute b = routeResult.Route;
 
                 var color = Colors.Green;
                 color.A = 128;
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    walkedLine = new MapPolyline
+                    var walkedLine = new MapPolyline
                     {
                         StrokeThickness = 11,
                         StrokeColor = color,
@@ -137,9 +169,25 @@ namespace RunForestRun.View
                         ZIndex = 2
 
                     };
-                    walkedLine.Path = new Geopath(b.Path.Positions);
+                    List<BasicGeoposition> tempList = new List<BasicGeoposition>();
 
-                    map.MapElements.Add(walkedLine);
+                    foreach(Geopoint e in walkedRoute)
+                    {
+                        tempList.Add(e.Position);
+                    }
+
+                    //walkedLine.Path = new Geopath(b.Path.Positions);
+                    walkedLine.Path = new Geopath(tempList);
+                    if (LatestwalkedLine !=null)
+                    {
+                        map.MapElements.Remove(LatestwalkedLine);
+                        LatestwalkedLine = walkedLine;
+                    }
+                    else
+                    {
+                        LatestwalkedLine = walkedLine;
+                    }
+                    map.MapElements.Add(LatestwalkedLine);
                 });
                 
 
@@ -173,6 +221,7 @@ namespace RunForestRun.View
                 = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
             
             MapRoute b = routeResult.Route;
+            
 
             var color = Colors.Green;
             color.A = 128;
