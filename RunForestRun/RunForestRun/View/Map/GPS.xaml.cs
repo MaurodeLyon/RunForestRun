@@ -8,6 +8,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Maps;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
@@ -27,10 +28,12 @@ namespace RunForestRun.View
     public sealed partial class GPS : Page
     {
         private Geolocator geolocator;
+        private MapIcon mapIcon1;
+
         public GPS()
         {
             this.InitializeComponent();
-            test();
+            //test();
         }
 
         private async void test()
@@ -50,14 +53,16 @@ namespace RunForestRun.View
                 {
                     DesiredAccuracy = PositionAccuracy.High,
                     MovementThreshold = 1
+                    
                 };
-                //geolocator.PositionChanged += GeolocatorPositionChanged;
+                
+                geolocator.PositionChanged += GeolocatorPositionChanged;
                 //GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
-
+            }
                 Geoposition d = await geolocator.GetGeopositionAsync();
 
                 var pos = new Geopoint(d.Coordinate.Point.Position);
-                MapIcon mapIcon1 = new MapIcon();
+                mapIcon1 = new MapIcon();
                 
                 mapIcon1.Location = pos;
                 mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
@@ -66,39 +71,41 @@ namespace RunForestRun.View
                 
                 map.MapElements.Add(mapIcon1);
 
-                double centerLatitude = d.Coordinate.Latitude;
-                double centerLongitude = d.Coordinate.Longitude;
-                MapPolygon mapPolygon = new MapPolygon();
-                mapPolygon.Path = new Geopath(new List<BasicGeoposition>() {
-                new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude-0.001 },
-                new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
-                new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
-                new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
+         //       double centerLatitude = d.Coordinate.Latitude;
+         //       double centerLongitude = d.Coordinate.Longitude;
+         //       MapPolygon mapPolygon = new MapPolygon();
+         //       mapPolygon.Path = new Geopath(new List<BasicGeoposition>() {
+         //       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude-0.001 },
+         //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
+         //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
+         //       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
 
-         });
+         //});
 
-                mapPolygon.ZIndex = 1;
-                mapPolygon.FillColor = Colors.Red;
-                mapPolygon.StrokeColor = Colors.Blue;
-                mapPolygon.StrokeThickness = 3;
-                mapPolygon.StrokeDashed = false;
-                map.MapElements.Add(mapPolygon);
+         //       mapPolygon.ZIndex = 1;
+         //       mapPolygon.FillColor = Colors.Red;
+         //       mapPolygon.StrokeColor = Colors.Blue;
+         //       mapPolygon.StrokeThickness = 3;
+         //       mapPolygon.StrokeDashed = false;
+         //       map.MapElements.Add(mapPolygon);
 
-                await map.TrySetViewAsync(pos, 15);
-            }
-            else
-            {
-                //GeofenceMonitor.Current.GeofenceStateChanged -= GeofenceStateChanged;
-                //geolocator.PositionChanged -= GeolocatorPositionChanged;
-                Geoposition d = await geolocator.GetGeopositionAsync();
-
-                var pos = new Geopoint(d.Coordinate.Point.Position);
-
-                await map.TrySetViewAsync(pos,15);
-                geolocator = null;
-            }
+                await map.TrySetViewAsync(pos, 17);
+            
 
             
+        }
+
+        private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            Geoposition d = await geolocator.GetGeopositionAsync();
+
+            var pos = new Geopoint(d.Coordinate.Point.Position);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                mapIcon1.Location = pos;
+            });
+
+            await map.TrySetViewAsync(pos, 17);
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
@@ -145,12 +152,20 @@ namespace RunForestRun.View
 
         private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
+            String test="wtfman";
+            if (args.MapElements.First() is MapIcon)
+            {
+                MapIcon two = (MapIcon)args.MapElements.First();
+                test = two.Title;
+            }
+
             var dialog = new Windows.UI.Popups.MessageDialog(
                 "Aliquam laoreet magna sit amet mauris iaculis ornare. " +
                 "Morbi iaculis augue vel elementum volutpat.",
-                "Lorem Ipsum");
+                "Lorem Ipsum" + test);
             
             var result = await dialog.ShowAsync();
+            
 
         }
 
