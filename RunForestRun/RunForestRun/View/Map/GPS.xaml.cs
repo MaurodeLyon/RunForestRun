@@ -90,7 +90,6 @@ namespace RunForestRun.View
                 //GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
             }
             Geoposition d = await geolocator.GetGeopositionAsync();
-
             var pos = new Geopoint(d.Coordinate.Point.Position);
 
             mapIcon1 = new MapIcon();

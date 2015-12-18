@@ -23,28 +23,30 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Map : Page
     {
+        Geoposition startpoint;
         public Map()
         {
             this.InitializeComponent();
-            debug();
             mapFrame.Navigate(typeof(GPS));
         }
-        private async void debug()
+        private async void getStart()
         {
             Geolocator locator = new Geolocator();
-            Geoposition position = await locator.GetGeopositionAsync();
-            Geocoordinate coordinate = position.Coordinate;
-            Geopoint point = coordinate.Point;
-            BasicGeoposition basic = point.Position;
+            startpoint = await locator.GetGeopositionAsync();
         }
         private void Kaart_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(GPS));
+            mapFrame.Navigate(typeof(GPS),startpoint);
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info));
+            mapFrame.Navigate(typeof(Info),startpoint);
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            getStart();
         }
     }
 }
