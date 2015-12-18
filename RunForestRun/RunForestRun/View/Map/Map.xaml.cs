@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -22,20 +23,30 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Map : Page
     {
+        Geoposition startpoint;
         public Map()
         {
             this.InitializeComponent();
             mapFrame.Navigate(typeof(GPS));
         }
-
+        private async void getStart()
+        {
+            Geolocator locator = new Geolocator();
+            startpoint = await locator.GetGeopositionAsync();
+        }
         private void Kaart_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(GPS));
+            mapFrame.Navigate(typeof(GPS),startpoint);
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info));
+            mapFrame.Navigate(typeof(Info),startpoint);
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            getStart();
         }
     }
 }
