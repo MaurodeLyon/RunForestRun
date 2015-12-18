@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RunForestRun.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,141 +30,62 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class GPS : Page
     {
-        private Geolocator geolocator;
-        private MapIcon mapIcon1;
-        private List<Geopoint> walkedRoute;
         private MapPolyline LatestwalkedLine;
+        private MapIcon mapIcon;
+        private Controller controller;
 
         public GPS()
         {
             this.InitializeComponent();
-            //walkedRoute = new List<Geopoint>();
-            //debug();
-           
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-            walkedRoute = (List<Geopoint>)e.Parameter;
+            controller = (Controller)e.Parameter;
+            controller.dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
+            mapIcon = new MapIcon();
         }
 
-        private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
-        {
-            var reports = sender.ReadReports();
-
-           
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                foreach (GeofenceStateChangeReport report in reports)
-                {
-                    GeofenceState state = report.NewState;
-                    Geofence geofence = report.Geofence;
-
-                    if (state == GeofenceState.Removed)
-                    {
-
-                    }
-
-                    else if (state == GeofenceState.Entered)
-                    {
-                        var dialog = new Windows.UI.Popups.MessageDialog(geofence.Id + "Entered");
-                        var result = await dialog.ShowAsync();
-
-
-
-                    }
-
-                    else if (state == GeofenceState.Exited)
-                    {
-
-                    }
-                }
-            });
-
-        }
-
-        private async void debug()
-        {
-            Geolocator locator = new Geolocator();
-            Geoposition position = await locator.GetGeopositionAsync();
-            Geocoordinate coordinate = position.Coordinate;
-            Geopoint point = coordinate.Point;
-            BasicGeoposition basic = point.Position;
-        }
 
         private async void Center_Click(object sender, RoutedEventArgs e)
         {
-            if (geolocator == null)
+            if (controller.dataHandler.locator == null)
             {
-                geolocator = new Geolocator
+                controller.dataHandler.locator = new Geolocator
                 {
                     DesiredAccuracy = PositionAccuracy.High,
                     MovementThreshold = 1
                 };
 
-                geolocator.PositionChanged += GeolocatorPositionChanged;
-                //GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
             }
-            Geoposition d = await geolocator.GetGeopositionAsync();
-
+            Geoposition d = await controller.dataHandler.locator.GetGeopositionAsync();
             var pos = new Geopoint(d.Coordinate.Point.Position);
 
-            mapIcon1 = new MapIcon();
-            mapIcon1.Location = pos;
-            mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
-            mapIcon1.Title = "Current position";
-            mapIcon1.ZIndex = 4;
+            mapIcon.Location = pos;
+            mapIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            mapIcon.Title = "Current position";
+            mapIcon.ZIndex = 4;
+            map.MapElements.Add(mapIcon);
 
-            map.MapElements.Add(mapIcon1);
-            //       double centerLatitude = d.Coordinate.Latitude;
-            //       double centerLongitude = d.Coordinate.Longitude;
-            //       MapPolygon mapPolygon = new MapPolygon();
-            //       mapPolygon.Path = new Geopath(new List<BasicGeoposition>() {
-            //       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude-0.001 },
-            //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
-            //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
-            //       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
-
-            //});
-
-            //       mapPolygon.ZIndex = 1;
-            //       mapPolygon.FillColor = Colors.Red;
-            //       mapPolygon.StrokeColor = Colors.Blue;
-            //       mapPolygon.StrokeThickness = 3;
-            //       mapPolygon.StrokeDashed = false;
-            //       map.MapElements.Add(mapPolygon);
             await map.TrySetViewAsync(pos, 17);
         }
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
+            Geoposition currentPosition = await controller.dataHandler.locator.GetGeopositionAsync();
 
-            Geoposition d = await geolocator.GetGeopositionAsync();
-
-            var pos = new Geopoint(d.Coordinate.Point.Position);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                mapIcon1.Location = pos;
+                mapIcon.Location = currentPosition.Coordinate.Point;
             });
 
-            await map.TrySetViewAsync(pos, 17);
+            await map.TrySetViewAsync(currentPosition.Coordinate.Point, 17);
 
-            if((bool)Map.LOCAL_SETTINGS.Values["logging"])
-            walkedRoute.Add(pos);
-
-            if (walkedRoute.Count >= 2)
+            if (controller.dataHandler.isWalking)
+                controller.dataHandler.currentRoute.Add(currentPosition);
+            if (controller.dataHandler.currentRoute.Count >= 2)
             {
-
-
-                //MapRouteFinderResult routeResult
-                //   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
-
-                //MapRoute b = routeResult.Route;
-
-
                 var color = Colors.Gray;
-                //color.A = ;
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     var walkedLine = new MapPolyline
@@ -172,18 +94,15 @@ namespace RunForestRun.View
                         StrokeColor = color,
                         StrokeDashed = false,
                         ZIndex = 3
-                        
-
                     };
 
                     List<BasicGeoposition> tempList = new List<BasicGeoposition>();
 
-                    foreach (Geopoint e in walkedRoute)
+                    foreach (Geoposition item in controller.dataHandler.currentRoute)
                     {
-                        tempList.Add(e.Position);
+                        tempList.Add(item.Coordinate.Point.Position);
                     }
 
-                    //walkedLine.Path = new Geopath(b.Path.Positions);
                     walkedLine.Path = new Geopath(tempList);
                     if (LatestwalkedLine != null)
                     {
@@ -196,21 +115,16 @@ namespace RunForestRun.View
                     }
                     map.MapElements.Add(LatestwalkedLine);
                 });
-
-
-
-
             }
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void TestRoute_Click(object sender, RoutedEventArgs e)
         {
             const string beginLocation = "Geertruidenberg";
             const string endLocation = "Breda";
             //"Granville, Manche, Frankrijk";
 
-            MapLocationFinderResult result
-                = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
+            MapLocationFinderResult result = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
             MapLocation from = result.Locations.First();
 
             result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
@@ -224,11 +138,9 @@ namespace RunForestRun.View
             mapIcon1.ZIndex = 4;
             map.MapElements.Add(mapIcon1);
 
-            MapRouteFinderResult routeResult
-                = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
+            MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
 
             MapRoute b = routeResult.Route;
-
 
             var color = Colors.Green;
             color.A = 128;
@@ -240,42 +152,31 @@ namespace RunForestRun.View
                 StrokeDashed = false,
                 ZIndex = 2
             };
-
             line.Path = new Geopath(b.Path.Positions);
-
             map.MapElements.Add(line);
         }
 
-        private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        /*private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
-            String test = "wtfman";
+            string test = "wtfman";
             if (args.MapElements.First() is MapIcon)
             {
                 MapIcon two = (MapIcon)args.MapElements.First();
                 test = two.Title;
             }
-
             var dialog = new Windows.UI.Popups.MessageDialog(
                 "Aliquam laoreet magna sit amet mauris iaculis ornare. " +
                 "Morbi iaculis augue vel elementum volutpat.",
                 "Lorem Ipsum" + test);
-
             var result = await dialog.ShowAsync();
+        }*/
 
-
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void TestGeoFence_Click(object sender, RoutedEventArgs e)
         {
             GeofenceMonitor.Current.Geofences.Clear();
             Geolocator locator = new Geolocator();
-
             var location = await locator.GetGeopositionAsync().AsTask();
-
-
-
-            Geofence fence
-             = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
+            Geofence fence = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
 
             if (fence == null)
             {
@@ -284,10 +185,6 @@ namespace RunForestRun.View
                                     false, TimeSpan.FromSeconds(10))
                         );
             }
-
-
-
-
             GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
 
 
@@ -327,8 +224,56 @@ namespace RunForestRun.View
 
             Geocircle geocircle = new Geocircle(to.Point.Position, 10);
             MonitoredGeofenceStates mask = MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited;
-            
-            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false,new TimeSpan(0)));
+
+            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false, new TimeSpan(0)));
+        }
+
+        private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
+        {
+            var reports = sender.ReadReports();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                foreach (GeofenceStateChangeReport report in reports)
+                {
+                    GeofenceState state = report.NewState;
+                    Geofence geofence = report.Geofence;
+
+                    if (state == GeofenceState.Removed)
+                    {
+
+                    }
+
+                    else if (state == GeofenceState.Entered)
+                    {
+                        var dialog = new Windows.UI.Popups.MessageDialog(geofence.Id + "Entered");
+                        var result = await dialog.ShowAsync();
+
+
+
+                    }
+
+                    else if (state == GeofenceState.Exited)
+                    {
+
+                    }
+                }
+            });
+
         }
     }
 }
+//       double centerLatitude = d.Coordinate.Latitude;
+//       double centerLongitude = d.Coordinate.Longitude;
+//       MapPolygon mapPolygon = new MapPolygon();
+//       mapPolygon.Path = new Geopath(new List<BasicGeoposition>() {
+//       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude-0.001 },
+//       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
+//       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
+//       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
+//});
+//       mapPolygon.ZIndex = 1;
+//       mapPolygon.FillColor = Colors.Red;
+//       mapPolygon.StrokeColor = Colors.Blue;
+//       mapPolygon.StrokeThickness = 3;
+//       mapPolygon.StrokeDashed = false;
+//       map.MapElements.Add(mapPolygon);

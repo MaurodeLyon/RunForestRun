@@ -1,10 +1,14 @@
-﻿using System;
+﻿using RunForestRun.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Services.Maps;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,9 +26,18 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Info : Page
     {
+        Controller controller;
+
         public Info()
         {
             this.InitializeComponent();
+            DataContext = controller;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            controller = e.Parameter as Controller;
         }
     }
 }

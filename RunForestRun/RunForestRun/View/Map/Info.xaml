@@ -24,7 +24,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Tijd" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Name="Tijd" Text="11:11" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="Tijd" Text="{Binding tijd}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
                     <TextBlock Name="TijdEenheid"  Text="mm:ss" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 </StackPanel>
             </Grid>
@@ -39,7 +39,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Afstand" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Name="Afstand" Text="33" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="Afstand" Text="{Binding afstand}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
                     <TextBlock Name="AfstandEenheid"  Text="Km" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 </StackPanel>
             </Grid>
@@ -53,7 +53,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Snelheid" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Name="Snelheid" Text="33" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="Snelheid" Text="{Binding snelheid}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
                     <TextBlock Name="SnelheidEenheid"  Text="m/s" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 </StackPanel>
             </Grid>
@@ -66,7 +66,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Tempo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Name="Tempo" Text="7:77" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
+                    <TextBlock Name="Tempo" Text="{Binding tempo}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80"/>
                     <TextBlock Name="TempoEenheid"  Text="min/km" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 </StackPanel>
             </Grid>
