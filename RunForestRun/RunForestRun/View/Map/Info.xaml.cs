@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +26,15 @@ namespace RunForestRun.View
         public Info()
         {
             this.InitializeComponent();
+            loadInfo();
+        }
+        private async void loadInfo()
+        {
+            Geoposition currentPosition = await Library.geolocator.Geolocator.GetGeopositionAsync();
+            Tijd.Text;
+            Afstand.Text;
+            Snelheid.Text;
+            Tempo.Text;
         }
     }
 }

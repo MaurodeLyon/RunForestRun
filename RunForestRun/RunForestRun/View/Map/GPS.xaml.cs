@@ -108,9 +108,7 @@ namespace RunForestRun.View
             //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
             //       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
             //       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
-
             //});
-
             //       mapPolygon.ZIndex = 1;
             //       mapPolygon.FillColor = Colors.Red;
             //       mapPolygon.StrokeColor = Colors.Blue;
@@ -122,7 +120,6 @@ namespace RunForestRun.View
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-
             Geoposition d = await geolocator.GetGeopositionAsync();
 
             var pos = new Geopoint(d.Coordinate.Point.Position);
@@ -132,19 +129,12 @@ namespace RunForestRun.View
             });
 
             await map.TrySetViewAsync(pos, 17);
-
             walkedRoute.Add(pos);
-
             if (walkedRoute.Count >= 2)
             {
-
-
                 //MapRouteFinderResult routeResult
                 //   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
-
                 //MapRoute b = routeResult.Route;
-
-
                 var color = Colors.Green;
                 color.A = 128;
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -155,7 +145,6 @@ namespace RunForestRun.View
                         StrokeColor = color,
                         StrokeDashed = false,
                         ZIndex = 2
-
                     };
                     List<BasicGeoposition> tempList = new List<BasicGeoposition>();
 
@@ -177,10 +166,6 @@ namespace RunForestRun.View
                     }
                     map.MapElements.Add(LatestwalkedLine);
                 });
-
-
-
-
             }
         }
 
@@ -190,8 +175,7 @@ namespace RunForestRun.View
             const string endLocation = "Breda";
             //"Granville, Manche, Frankrijk";
 
-            MapLocationFinderResult result
-                = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
+            MapLocationFinderResult result = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
             MapLocation from = result.Locations.First();
 
             result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
@@ -205,12 +189,10 @@ namespace RunForestRun.View
             mapIcon1.ZIndex = 0;
             map.MapElements.Add(mapIcon1);
 
-            MapRouteFinderResult routeResult
-                = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
+            MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
 
             MapRoute b = routeResult.Route;
-
-
+            
             var color = Colors.Green;
             color.A = 128;
 
@@ -221,31 +203,23 @@ namespace RunForestRun.View
                 StrokeDashed = false,
                 ZIndex = 2
             };
-
             line.Path = new Geopath(b.Path.Positions);
-
             map.MapElements.Add(line);
         }
 
         private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
-            String test = "wtfman";
+            string test = "wtfman";
             if (args.MapElements.First() is MapIcon)
             {
                 MapIcon two = (MapIcon)args.MapElements.First();
                 test = two.Title;
             }
-
             var dialog = new Windows.UI.Popups.MessageDialog(
                 "Aliquam laoreet magna sit amet mauris iaculis ornare. " +
                 "Morbi iaculis augue vel elementum volutpat.",
                 "Lorem Ipsum" + test);
-
             var result = await dialog.ShowAsync();
-
-
         }
-
-
     }
 }
