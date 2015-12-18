@@ -45,32 +45,47 @@ namespace RunForestRun.View
 
         private async void geoFencing()
         {
-            Geolocator locator = new Geolocator();
-
-            var location = await locator.GetGeopositionAsync().AsTask();
-
             
 
-            Geofence fence
-             = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
-
-            if (fence == null)
-            {
-                GeofenceMonitor.Current.Geofences.Add(
-                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 50.0), MonitoredGeofenceStates.Entered,
-                                    false, TimeSpan.FromSeconds(10))
-                        );
-            }
 
 
-
-
-            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
         }
 
-        private void GeofenceStateChanged(GeofenceMonitor sender, object args)
+        private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
         {
-            throw new NotImplementedException();
+            var reports = sender.ReadReports();
+
+           
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                foreach (GeofenceStateChangeReport report in reports)
+                {
+                    GeofenceState state = report.NewState;
+                    Geofence geofence = report.Geofence;
+
+                    if (state == GeofenceState.Removed)
+                    {
+
+                    }
+
+                    else if (state == GeofenceState.Entered)
+                    {
+                        var dialog = new Windows.UI.Popups.MessageDialog(geofence.Id + "Entered");
+                        var result = await dialog.ShowAsync();
+
+
+
+                    }
+
+                    else if (state == GeofenceState.Exited)
+                    {
+
+                    }
+                }
+            });
+
+
         }
 
         private async void test()
@@ -166,7 +181,7 @@ namespace RunForestRun.View
                         StrokeThickness = 11,
                         StrokeColor = color,
                         StrokeDashed = false,
-                        ZIndex = 2
+                        ZIndex = 4
 
                     };
                     List<BasicGeoposition> tempList = new List<BasicGeoposition>();
@@ -258,6 +273,69 @@ namespace RunForestRun.View
 
         }
 
-        
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Geolocator locator = new Geolocator();
+
+            var location = await locator.GetGeopositionAsync().AsTask();
+
+
+
+            Geofence fence
+             = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
+
+            if (fence == null)
+            {
+                GeofenceMonitor.Current.Geofences.Add(
+                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 50.0), MonitoredGeofenceStates.Entered,
+                                    false, TimeSpan.FromSeconds(10))
+                        );
+            }
+
+
+
+
+            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
+
+
+            const string beginLocation = "Lovensdijkstraat, Breda";
+            const string endLocation = "Hogeschoollaan,Breda";
+            //"Granville, Manche, Frankrijk";
+
+            MapLocationFinderResult result
+                = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
+            MapLocation from = result.Locations.First();
+
+            result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
+            MapLocation to = result.Locations.First();
+
+            MapRouteFinderResult routeResult
+                = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
+
+
+
+            MapRoute b = routeResult.Route;
+
+
+            var color = Colors.Green;
+            color.A = 128;
+
+            var line = new MapPolyline
+            {
+                StrokeThickness = 11,
+                StrokeColor = color,
+                StrokeDashed = false,
+                ZIndex = 2
+            };
+
+            line.Path = new Geopath(b.Path.Positions);
+
+            map.MapElements.Add(line);
+
+            Geocircle geocircle = new Geocircle(to.Point.Position, 50);
+            MonitoredGeofenceStates mask = MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited;
+
+            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false));
+        }
     }
 }
