@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,10 +26,16 @@ namespace RunForestRun.View
     public sealed partial class Map : Page
     {
         Geoposition startpoint;
+        private List<Geopoint> walkedRoute;
+        private bool logging;
+        public static ApplicationDataContainer LOCAL_SETTINGS = ApplicationData.Current.LocalSettings;
         public Map()
         {
             this.InitializeComponent();
-            mapFrame.Navigate(typeof(GPS));
+            walkedRoute = new List<Geopoint>();
+            LOCAL_SETTINGS.Values["logging"] = false;
+            mapFrame.Navigate(typeof(GPS),walkedRoute);
+            
         }
         private async void getStart()
         {
@@ -41,12 +49,14 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info),startpoint);
+            mapFrame.Navigate(typeof(Info));
+            Debug.WriteLine(walkedRoute.Count);
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             getStart();
+            LOCAL_SETTINGS.Values["logging"] = true;
         }
     }
 }
