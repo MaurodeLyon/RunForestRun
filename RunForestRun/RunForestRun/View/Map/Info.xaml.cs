@@ -26,35 +26,18 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Info : Page
     {
-        Geoposition startpoint;
-        Geolocator locator;
         Controller controller;
 
         public Info()
         {
             this.InitializeComponent();
-            locator = new Geolocator();
-            locator.PositionChanged += GeolocatorPositionChanged;
-            controller = new Controller();
             DataContext = controller;
-        }
-
-
-        private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
-        {
-            Geoposition currentPosition = await locator.GetGeopositionAsync();
-
-            MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteAsync(startpoint.Coordinate.Point, currentPosition.Coordinate.Point);
-
-            controller.tijd = DateTime.Now.ToString();
-            controller.afstand = (routeResult.Route.LengthInMeters).ToString();
-            controller.snelheid = currentPosition.Coordinate.Speed.ToString();
-            controller.tempo = 10.ToString();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            startpoint = (Geoposition)e.Parameter;
+            base.OnNavigatedTo(e);
+            controller = e.Parameter as Controller;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RunForestRun.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,38 +26,32 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Map : Page
     {
-        Geoposition startpoint;
-        private List<Geopoint> walkedRoute;
-        private bool logging;
-        public static ApplicationDataContainer LOCAL_SETTINGS = ApplicationData.Current.LocalSettings;
+        Controller controller;
         public Map()
         {
             this.InitializeComponent();
-            walkedRoute = new List<Geopoint>();
-            LOCAL_SETTINGS.Values["logging"] = false;
-            mapFrame.Navigate(typeof(GPS),walkedRoute);
-            
         }
-        private async void getStart()
-        {
-            Geolocator locator = new Geolocator();
-            startpoint = await locator.GetGeopositionAsync();
-        }
+
         private void Kaart_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(GPS),startpoint);
+            mapFrame.Navigate(typeof(GPS),controller);
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info));
-            Debug.WriteLine(walkedRoute.Count);
+            mapFrame.Navigate(typeof(Info),controller);
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            getStart();
-            LOCAL_SETTINGS.Values["logging"] = true;
+            controller.startRecording();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            controller = e.Parameter as Controller;
+            mapFrame.Navigate(typeof(GPS), controller);
         }
     }
 }
