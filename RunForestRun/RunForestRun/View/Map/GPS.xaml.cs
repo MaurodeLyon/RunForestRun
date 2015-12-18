@@ -42,6 +42,8 @@ namespace RunForestRun.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             controller = (Controller)e.Parameter;
+            controller.dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
+            mapIcon = new MapIcon();
         }
 
 
@@ -55,12 +57,10 @@ namespace RunForestRun.View
                     MovementThreshold = 1
                 };
 
-                controller.dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
             }
             Geoposition d = await controller.dataHandler.locator.GetGeopositionAsync();
             var pos = new Geopoint(d.Coordinate.Point.Position);
 
-            mapIcon = new MapIcon();
             mapIcon.Location = pos;
             mapIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
             mapIcon.Title = "Current position";

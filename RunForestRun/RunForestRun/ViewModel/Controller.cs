@@ -91,10 +91,12 @@ namespace RunForestRun.ViewModel
             Geoposition currentPosition = await dataHandler.locator.GetGeopositionAsync();
             List<Geopoint> tempList = new List<Geopoint>();
 
-            foreach (Geoposition item in dataHandler.currentRoute)
+            List<Geoposition> tempPos = new List<Geoposition>(dataHandler.currentRoute);
+            foreach (Geoposition item in tempPos)
             {
                 tempList.Add(item.Coordinate.Point);
             }
+
             if (tempList.Count >= 2)
             {
                 MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(tempList);
