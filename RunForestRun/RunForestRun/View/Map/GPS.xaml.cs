@@ -33,7 +33,7 @@ namespace RunForestRun.View
         private MapIcon mapIcon1;
         private List<Geopoint> walkedRoute;
         private MapPolyline LatestwalkedLine;
-        private int trigger = 0;
+       
 
         public GPS()
         {
@@ -134,7 +134,7 @@ namespace RunForestRun.View
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            trigger++;
+           
             Geoposition d = await geolocator.GetGeopositionAsync();
             
             var pos = new Geopoint(d.Coordinate.Point.Position);
@@ -149,7 +149,7 @@ namespace RunForestRun.View
 
             if (walkedRoute.Count >= 2)
             {
-                trigger = 0;
+               
 
                 //MapRouteFinderResult routeResult
                 //   = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(walkedRoute);
@@ -258,16 +258,6 @@ namespace RunForestRun.View
 
         }
 
-        //private void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
-        //{
-
-        //    var pos = new Geopoint(new BasicGeoposition
-        //    { Latitude = position.Latitude, Longitude = position.Longitude });
-
-        //    DrawCarIcon(pos);
-
-
-        //    await MyMap.TrySetViewAsync(pos, MyMap.ZoomLevel);
-        //}
+        
     }
 }
