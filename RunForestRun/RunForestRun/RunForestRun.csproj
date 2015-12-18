@@ -99,6 +99,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Library\FileIO.cs" />
+    <Compile Include="Library\NavigateWrapper.cs" />
     <Compile Include="Model\DataHandler.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="ViewModel\Controller.cs" />

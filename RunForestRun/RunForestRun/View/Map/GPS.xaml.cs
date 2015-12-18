@@ -37,9 +37,14 @@ namespace RunForestRun.View
         public GPS()
         {
             this.InitializeComponent();
-            walkedRoute = new List<Geopoint>();
+            //walkedRoute = new List<Geopoint>();
             //debug();
-            geoFencing();
+           
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            walkedRoute = (List<Geopoint>)e.Parameter;
         }
 
         private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
@@ -107,8 +112,8 @@ namespace RunForestRun.View
             mapIcon1 = new MapIcon();
             mapIcon1.Location = pos;
             mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
-            mapIcon1.Title = "Current positions";
-            mapIcon1.ZIndex = 0;
+            mapIcon1.Title = "Current position";
+            mapIcon1.ZIndex = 4;
 
             map.MapElements.Add(mapIcon1);
             //       double centerLatitude = d.Coordinate.Latitude;
@@ -144,6 +149,7 @@ namespace RunForestRun.View
 
             await map.TrySetViewAsync(pos, 17);
 
+            if((bool)Map.LOCAL_SETTINGS.Values["logging"])
             walkedRoute.Add(pos);
 
             if (walkedRoute.Count >= 2)
@@ -156,8 +162,8 @@ namespace RunForestRun.View
                 //MapRoute b = routeResult.Route;
 
 
-                var color = Colors.Green;
-                color.A = 128;
+                var color = Colors.Gray;
+                //color.A = ;
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     var walkedLine = new MapPolyline
@@ -165,9 +171,11 @@ namespace RunForestRun.View
                         StrokeThickness = 11,
                         StrokeColor = color,
                         StrokeDashed = false,
-                        ZIndex = 4
+                        ZIndex = 3
+                        
 
                     };
+
                     List<BasicGeoposition> tempList = new List<BasicGeoposition>();
 
                     foreach (Geopoint e in walkedRoute)
@@ -213,7 +221,7 @@ namespace RunForestRun.View
             mapIcon1.Location = new Geopoint(to.Point.Position);
             mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
             mapIcon1.Title = "Lindelauf BV (Supported by Putin)";
-            mapIcon1.ZIndex = 0;
+            mapIcon1.ZIndex = 4;
             map.MapElements.Add(mapIcon1);
 
             MapRouteFinderResult routeResult
@@ -259,6 +267,7 @@ namespace RunForestRun.View
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            GeofenceMonitor.Current.Geofences.Clear();
             Geolocator locator = new Geolocator();
 
             var location = await locator.GetGeopositionAsync().AsTask();
@@ -271,7 +280,7 @@ namespace RunForestRun.View
             if (fence == null)
             {
                 GeofenceMonitor.Current.Geofences.Add(
-                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 50.0), MonitoredGeofenceStates.Entered,
+                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 10.0), MonitoredGeofenceStates.Entered,
                                     false, TimeSpan.FromSeconds(10))
                         );
             }
@@ -301,8 +310,8 @@ namespace RunForestRun.View
             MapRoute b = routeResult.Route;
 
 
-            var color = Colors.Green;
-            color.A = 128;
+            var color = Colors.Turquoise;
+            //color.A = 128;
 
             var line = new MapPolyline
             {
@@ -316,10 +325,10 @@ namespace RunForestRun.View
 
             map.MapElements.Add(line);
 
-            Geocircle geocircle = new Geocircle(to.Point.Position, 50);
+            Geocircle geocircle = new Geocircle(to.Point.Position, 10);
             MonitoredGeofenceStates mask = MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited;
-
-            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false));
+            
+            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false,new TimeSpan(0)));
         }
     }
 }
