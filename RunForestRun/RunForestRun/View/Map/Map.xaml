@@ -16,7 +16,7 @@
 
         <RelativePanel Grid.Row="1" HorizontalAlignment="Center">
             <Button Grid.Row="1"  Name="Kaart" FontFamily="Segoe MDL2 Assets" Content="&#xE128;" FontSize ="36" Click="Kaart_Click"/>
-            <Button Grid.Row="1" Name="Start" FontFamily="Segoe MDL2 Assets" Content="&#xE101;" FontSize ="36"  RelativePanel.RightOf="Kaart" />
+            <Button Grid.Row="1" Name="Start" FontFamily="Segoe MDL2 Assets" Content="&#xE101;" FontSize ="36"  RelativePanel.RightOf="Kaart" Click="Start_Click" />
             <Button Grid.Row="1"  Name="Info" FontFamily="Segoe MDL2 Assets" Content="&#xE95E;" FontSize ="36" RelativePanel.RightOf="Start" Click="Info_Click"/>
         </RelativePanel>
     </Grid>

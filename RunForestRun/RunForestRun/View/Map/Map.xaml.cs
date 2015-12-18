@@ -1,10 +1,14 @@
-﻿using System;
+﻿using RunForestRun.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,20 +26,32 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Map : Page
     {
+        Controller controller;
         public Map()
         {
             this.InitializeComponent();
-            mapFrame.Navigate(typeof(GPS));
         }
 
         private void Kaart_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(GPS));
+            mapFrame.Navigate(typeof(GPS),controller);
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info));
+            mapFrame.Navigate(typeof(Info),controller);
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            controller.startRecording();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            controller = e.Parameter as Controller;
+            mapFrame.Navigate(typeof(GPS), controller);
         }
     }
 }

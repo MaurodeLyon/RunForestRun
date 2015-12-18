@@ -1,4 +1,5 @@
 ﻿using RunForestRun.View;
+using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +24,13 @@ namespace RunForestRun
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private Controller controller;
         public MainPage()
         {
             this.InitializeComponent();
             PageName.Text = "Map";
-            myFrame.Navigate(typeof(Map));
+            controller = new Controller();
+            myFrame.Navigate(typeof(Map), controller);
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -40,17 +43,17 @@ namespace RunForestRun
             if (Map.IsSelected)
             {
                 PageName.Text = "Map";
-                myFrame.Navigate(typeof(Map));
+                myFrame.Navigate(typeof(Map), controller);
             }
             else if (Save.IsSelected)
             {
                 PageName.Text = "Load";
-                myFrame.Navigate(typeof(Load));
+                myFrame.Navigate(typeof(Load), controller);
             }
             else if (Compare.IsSelected)
             {
                 PageName.Text = "Compare";
-                myFrame.Navigate(typeof(MainPage));
+                myFrame.Navigate(typeof(MainPage), controller);
             }
         }
     }
