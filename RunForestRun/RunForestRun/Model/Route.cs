@@ -7,7 +7,7 @@ using Windows.Devices.Geolocation;
 
 namespace RunForestRun.Model
 {
-    class Route
+    public class Route
     {
         private string _naam;
 
@@ -16,21 +16,35 @@ namespace RunForestRun.Model
             get { return _naam; }
             set { _naam = value; }
         }
-        private DateTime _tijd;
+        private DateTime _beginTijd;
 
-        public DateTime tijd
+        public DateTime beginTijd
         {
-            get { return _tijd; }
-            set { _tijd = value; }
+            get { return _beginTijd; }
+            set { _beginTijd = value; }
         }
 
-        private List<Geoposition> _routePoints;
+        private DateTime _eindTijd;
 
-        public List<Geoposition> routePoints
+        public DateTime eindTijd
+        {
+            get { return _eindTijd; }
+            set { _eindTijd = value; }
+        }
+
+
+        private List<Geocoordinate> _routePoints;
+
+        public List<Geocoordinate> routePoints
         {
             get { return _routePoints; }
             set { _routePoints = value; }
         }
 
+        public Route(string naam)
+        {
+            _naam = naam;
+            _routePoints = new List<Geocoordinate>();
+        }
     }
 }

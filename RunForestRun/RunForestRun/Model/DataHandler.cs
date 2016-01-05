@@ -10,6 +10,14 @@ namespace RunForestRun.Model
 {
     class DataHandler
     {
+        private List<string> _manifest;
+
+        public List<string> manifest
+        {
+            get { return _manifest; }
+            set { _manifest = value; }
+        }
+
         private List<Route> _routes;
 
         public List<Route> routes
@@ -45,8 +53,13 @@ namespace RunForestRun.Model
             _currentRoute = new List<Geoposition>();
             _routes = new List<Route>();
             _isWalking = false;
+            load();
         }
 
-        
+        private async void load()
+        {
+            _manifest = await Library.FileIO.LoadManifest();
+            _routes = await Library.FileIO.LoadAllRoutes(_manifest);
+        }
     }
 }
