@@ -37,11 +37,14 @@ namespace RunForestRun
 
             testLoad();
 
+            
         }
 
         List<string> manifest = new List<string>();
         private async void testLoad()
         {
+            Library.FileIO.SaveManifest(manifest);
+
             manifest = await Library.FileIO.LoadManifest();
             //Library.FileIO.SaveRoute(new Model.Route("route1"), manifest);
             //Library.FileIO.SaveRoute(new Model.Route("route2"), manifest);

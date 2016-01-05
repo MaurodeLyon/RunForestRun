@@ -27,10 +27,7 @@ namespace RunForestRun.Library
         public static async Task<List<string>> LoadManifest()
         {
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            if (true)
-            {
-                storageFolder.
-            }
+            
             Windows.Storage.StorageFile manifest = await storageFolder.GetFileAsync("Manifest.txt");
             List<string> routeNameList = JsonConvert.DeserializeObject<List<string>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
             return routeNameList;
