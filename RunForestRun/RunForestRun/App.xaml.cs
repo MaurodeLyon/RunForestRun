@@ -52,6 +52,14 @@ namespace RunForestRun
                 manifest = await storageFolder.GetFileAsync("Manifest.txt");
                 a = JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
             }
+            catch (JsonSerializationException)
+            {
+                string serializedManifest = JsonConvert.SerializeObject(new List<Route>());
+                StorageFile manifestFile = await storageFolder.CreateFileAsync("Manifest.txt", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(manifestFile, serializedManifest);
+                manifest = await storageFolder.GetFileAsync("Manifest.txt");
+                a = JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
+            }
             catch (FileNotFoundException ex)
             {
                 System.Diagnostics.Debug.WriteLine("error loading manifest: " + ex);

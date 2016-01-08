@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RunForestRun.Model;
+using RunForestRun.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +24,9 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Load : Page
     {
+        public List<Route> RouteList = new List<Route>();
+        private Controller controller;
+
         public Load()
         {
             this.InitializeComponent();
@@ -30,6 +35,12 @@ namespace RunForestRun.View
         private void Info_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            controller = (Controller)e.Parameter;
         }
     }
 }
