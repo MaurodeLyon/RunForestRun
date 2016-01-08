@@ -31,13 +31,13 @@ namespace RunForestRun.View
         public Info()
         {
             this.InitializeComponent();
-            DataContext = controller;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             controller = e.Parameter as Controller;
+            DataContext = controller;
         }
     }
 }

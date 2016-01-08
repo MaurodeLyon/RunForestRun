@@ -1,13 +1,16 @@
-﻿using RunForestRun.Model;
+﻿using Newtonsoft.Json;
+using RunForestRun.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -34,7 +37,34 @@ namespace RunForestRun
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            checkForManifest();
         }
+
+
+
+        private async void checkForManifest()
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile manifest;
+            List<Route> a = null;
+            try
+            {
+                manifest = await storageFolder.GetFileAsync("Manifest.txt");
+                a = JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
+            }
+            catch (FileNotFoundException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("error loading manifest: " + ex);
+            }
+            if (a == null)
+            {
+                string serializedManifest = JsonConvert.SerializeObject(new List<Route>());
+                StorageFile manifestFile = await storageFolder.CreateFileAsync("Manifest.txt", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(manifestFile, serializedManifest);
+            }
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+        }
+
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points

@@ -52,17 +52,24 @@ namespace RunForestRun.View
 
         private async void Center_Click(object sender, RoutedEventArgs e)
         {
-            currentPosIcon.Location = controller.currentPosition.Coordinate.Point;
-            await map.TrySetViewAsync(controller.currentPosition.Coordinate.Point, 17);
+            if (controller.currentPosition != null)
+            {
+                currentPosIcon.Location = controller.currentPosition.Point;
+                await map.TrySetViewAsync(controller.currentPosition.Point, 17);
+
+            }
         }
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            currentPosIcon.Location = controller.currentPosition.Coordinate.Point;
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                currentPosIcon.Location = controller.currentPosition.Point;
+            });
             if (controller.dataHandler.isWalking)
             {
 
-                await map.TrySetViewAsync(controller.currentPosition.Coordinate.Point, 17);
+                await map.TrySetViewAsync(controller.currentPosition.Point, 17);
 
                 if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
                 {
@@ -78,9 +85,9 @@ namespace RunForestRun.View
 
                         List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
 
-                        foreach (Geoposition item in controller.dataHandler.currentRoute.routePoints)
+                        foreach (Geocoordinate item in controller.dataHandler.currentRoute.routePoints)
                         {
-                            basicPositionList.Add(item.Coordinate.Point.Position);
+                            basicPositionList.Add(item.Point.Position);
                         }
 
                         walkedLine.Path = new Geopath(basicPositionList);
@@ -235,18 +242,3 @@ namespace RunForestRun.View
         }
     }
 }
-//       double centerLatitude = d.Coordinate.Latitude;
-//       double centerLongitude = d.Coordinate.Longitude;
-//       MapPolygon mapPolygon = new MapPolygon();
-//       mapPolygon.Path = new Geopath(new List<BasicGeoposition>() {
-//       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude-0.001 },
-//       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude-0.001 },
-//       new BasicGeoposition() {Latitude=centerLatitude-0.0005, Longitude=centerLongitude+0.001 },
-//       new BasicGeoposition() {Latitude=centerLatitude+0.0005, Longitude=centerLongitude+0.001 },
-//});
-//       mapPolygon.ZIndex = 1;
-//       mapPolygon.FillColor = Colors.Red;
-//       mapPolygon.StrokeColor = Colors.Blue;
-//       mapPolygon.StrokeThickness = 3;
-//       mapPolygon.StrokeDashed = false;
-//       map.MapElements.Add(mapPolygon);

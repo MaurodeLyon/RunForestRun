@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Services.Maps;
+using Windows.UI.Core;
+using System.ServiceModel;
+using Windows.UI.Xaml;
 
 namespace RunForestRun.ViewModel
 {
@@ -71,6 +74,13 @@ namespace RunForestRun.ViewModel
             _tempo = "0";
             _tijd = "0";
             dataHandler.locator.PositionChanged += locationChanged;
+            checkPosition();
+        }
+
+        private async void checkPosition()
+        {
+            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
+            currentPosition = update.Coordinate;
         }
 
         internal void toggleRecording()
@@ -92,11 +102,12 @@ namespace RunForestRun.ViewModel
             }
         }
 
-        public Geoposition currentPosition;
+        public Geocoordinate currentPosition;
 
         private async void locationChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            currentPosition = await dataHandler.locator.GetGeopositionAsync();
+            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
+            currentPosition = update.Coordinate;
             loadInfoPage();
             if (dataHandler.isWalking)
                 recording();
@@ -106,8 +117,8 @@ namespace RunForestRun.ViewModel
         {
             List<Geopoint> currentGeopoints = new List<Geopoint>();
 
-            foreach (Geoposition item in dataHandler.currentRoute.routePoints)
-                currentGeopoints.Add(item.Coordinate.Point);
+            foreach (Geocoordinate item in dataHandler.currentRoute.routePoints)
+                currentGeopoints.Add(item.Point);
 
             if (currentGeopoints.Count >= 2)
             {
@@ -116,7 +127,7 @@ namespace RunForestRun.ViewModel
             }
 
             tijd = DateTime.Now.ToString();
-            snelheid = currentPosition.Coordinate.Speed.ToString();
+            snelheid = currentPosition.Speed.ToString();
             tempo = 10.ToString();
         }
 
@@ -128,7 +139,8 @@ namespace RunForestRun.ViewModel
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
+
