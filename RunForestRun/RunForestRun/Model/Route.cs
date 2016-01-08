@@ -12,7 +12,7 @@ namespace RunForestRun.Model
         private string _naam;
         private DateTime _beginTijd;
         private DateTime _eindTijd;
-        private List<Geocoordinate> _routePoints;
+        private List<Geopoint> _routePoints;
 
         public string naam
         {
@@ -29,7 +29,7 @@ namespace RunForestRun.Model
             get { return _beginTijd; }
             set { _beginTijd = value; }
         }
-        public List<Geocoordinate> routePoints
+        public List<Geopoint> routePoints
         {
             get { return _routePoints; }
             set { _routePoints = value; }
@@ -38,7 +38,7 @@ namespace RunForestRun.Model
         public Route()
         {
             _beginTijd = DateTime.Now;
-            _routePoints = new List<Geocoordinate>();
+            _routePoints = new List<Geopoint>();
         }
     }
 }

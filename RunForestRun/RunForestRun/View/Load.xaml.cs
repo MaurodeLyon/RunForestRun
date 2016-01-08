@@ -24,7 +24,7 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Load : Page
     {
-        public List<Route> RouteList = new List<Route>();
+        public List<Route> RouteList;
         private Controller controller;
 
         public Load()
@@ -37,10 +37,12 @@ namespace RunForestRun.View
             throw new NotImplementedException();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             controller = (Controller)e.Parameter;
+            controller.dataHandler.manifest = await Library.FileIO.LoadManifest();
+            RouteList = controller.dataHandler.manifest;
         }
     }
 }

@@ -5,18 +5,24 @@
     xmlns:local="using:RunForestRun.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:RunForestRun.Model"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" ></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0">
-            <ListBox>
-                <ListBoxItem Content="LOREM NOGWAT" FontSize="40" HorizontalAlignment="Stretch"/>
-            </ListBox>
-        </ScrollViewer>
+        <ListView Grid.Row="0" ItemsSource="{x:Bind RouteList}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" IsItemClickEnabled="True">
+            <ListView.ItemTemplate>
+                <DataTemplate  x:DataType="model:Route">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock x:Name="Routename" Height="25"  Text="{x:Bind naam}" FontSize="20"/>
+                        <TextBlock x:Name="RouteStart" Height="25" Text="{x:Bind beginTijd}" FontSize="10"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Button Grid.Row="1"  Name="Info" FontFamily="Segoe MDL2 Assets" Content="&#xE898;" FontSize ="36" HorizontalAlignment="Stretch" Click="Info_Click"/>
     </Grid>
 </Page>

@@ -54,46 +54,49 @@ namespace RunForestRun.View
         {
             if (controller.currentPosition != null)
             {
-                currentPosIcon.Location = controller.currentPosition.Point;
-                await map.TrySetViewAsync(controller.currentPosition.Point, 17);
+                currentPosIcon.Location = controller.currentPosition;
+                await map.TrySetViewAsync(controller.currentPosition, 17);
 
             }
         }
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            if (controller.currentPosition != null)
             {
-                currentPosIcon.Location = controller.currentPosition.Point;
-            });
-            if (controller.dataHandler.isWalking)
-            {
-
-                await map.TrySetViewAsync(controller.currentPosition.Point, 17);
-
-                if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    currentPosIcon.Location = controller.currentPosition;
+                });
+                if (controller.dataHandler.isWalking)
+                {
+
+                    await map.TrySetViewAsync(controller.currentPosition, 17);
+
+                    if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
                     {
-                        MapPolyline walkedLine = new MapPolyline
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                         {
-                            StrokeThickness = 11,
-                            StrokeColor = Colors.Gray,
-                            StrokeDashed = false,
-                            ZIndex = 3
-                        };
+                            MapPolyline walkedLine = new MapPolyline
+                            {
+                                StrokeThickness = 11,
+                                StrokeColor = Colors.Gray,
+                                StrokeDashed = false,
+                                ZIndex = 3
+                            };
 
-                        List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
+                            List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
 
-                        foreach (Geocoordinate item in controller.dataHandler.currentRoute.routePoints)
-                        {
-                            basicPositionList.Add(item.Point.Position);
-                        }
+                            foreach (Geopoint item in controller.dataHandler.currentRoute.routePoints)
+                            {
+                                basicPositionList.Add(item.Position);
+                            }
 
-                        walkedLine.Path = new Geopath(basicPositionList);
+                            walkedLine.Path = new Geopath(basicPositionList);
 
-                        map.MapElements.Add(walkedLine);
-                    });
+                            map.MapElements.Add(walkedLine);
+                        });
+                    }
                 }
             }
         }
