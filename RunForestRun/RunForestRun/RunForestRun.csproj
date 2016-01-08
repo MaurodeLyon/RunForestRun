@@ -99,7 +99,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Library\FileIO.cs" />
-    <Compile Include="Library\NavigateWrapper.cs" />
     <Compile Include="Model\DataHandler.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="ViewModel\Controller.cs" />
@@ -169,9 +168,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -10,41 +10,35 @@ namespace RunForestRun.Model
     public class Route
     {
         private string _naam;
+        private DateTime _beginTijd;
+        private DateTime _eindTijd;
+        private List<Geoposition> _routePoints;
 
         public string naam
         {
             get { return _naam; }
             set { _naam = value; }
         }
-        private DateTime _beginTijd;
-
-        public DateTime beginTijd
-        {
-            get { return _beginTijd; }
-            set { _beginTijd = value; }
-        }
-
-        private DateTime _eindTijd;
-
         public DateTime eindTijd
         {
             get { return _eindTijd; }
             set { _eindTijd = value; }
         }
-
-
-        private List<Geocoordinate> _routePoints;
-
-        public List<Geocoordinate> routePoints
+        public DateTime beginTijd
+        {
+            get { return _beginTijd; }
+            set { _beginTijd = value; }
+        }
+        public List<Geoposition> routePoints
         {
             get { return _routePoints; }
             set { _routePoints = value; }
         }
 
-        public Route(string naam)
+        public Route()
         {
-            _naam = naam;
-            _routePoints = new List<Geocoordinate>();
+            _beginTijd = DateTime.Now;
+            _routePoints = new List<Geoposition>();
         }
     }
 }

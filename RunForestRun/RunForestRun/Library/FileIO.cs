@@ -16,7 +16,7 @@ namespace RunForestRun.Library
         //
         // save/load manifest
         //
-        public static async void SaveManifest(List<string> manifest)
+        public static async void SaveManifest(List<Route> manifest)
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             string serializedManifest = JsonConvert.SerializeObject(manifest);
@@ -24,7 +24,7 @@ namespace RunForestRun.Library
             await Windows.Storage.FileIO.WriteTextAsync(manifestFile, serializedManifest);
         }
 
-        public static async Task<List<string>> LoadManifest()
+        public static async Task<List<Route>> LoadManifest()
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile manifest;
@@ -37,7 +37,7 @@ namespace RunForestRun.Library
                 System.Diagnostics.Debug.WriteLine("error loading manifest: " + ex);
                 return null;
             }
-            return JsonConvert.DeserializeObject<List<string>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
+            return JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
         }
     }
 }

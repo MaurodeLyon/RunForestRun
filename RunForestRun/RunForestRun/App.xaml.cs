@@ -34,25 +34,6 @@ namespace RunForestRun
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-
-            testLoad();
-
-            
-        }
-
-        List<string> manifest = new List<string>();
-        private async void testLoad()
-        {
-            //Library.FileIO.SaveManifest(manifest);
-
-            manifest = await Library.FileIO.LoadManifest();
-            //Library.FileIO.SaveRoute(new Model.Route("route1"), manifest);
-            //Library.FileIO.SaveRoute(new Model.Route("route2"), manifest);
-            Library.FileIO.SaveRoute(new Model.Route("route3"), manifest);
-            //Library.FileIO.SaveRoute(new Model.Route("route4"), manifest);
-
-            List<Route> r = await Library.FileIO.LoadAllRoutes(manifest);
-
         }
 
         /// <summary>

@@ -29,15 +29,7 @@ namespace RunForestRun
         public MainPage()
         {
             this.InitializeComponent();
-            Library.FileIO.testSave();
-            Route route = new Route("a");
-            List<Route> routes = new List<Route>();
-            routes.Add(route);
-            routes.Add(route);
-            routes.Add(route);
-            Library.FileIO.SaveRoutes(new List<Route>(routes));
             PageName.Text = "Map";
-            var a = Library.FileIO.LoadRoutes();
             controller = new Controller();
             innerFrame.Navigate(typeof(Map), controller);
         }

@@ -30,91 +30,64 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class GPS : Page
     {
-        private MapPolyline LatestwalkedLine;
-        private MapIcon mapIcon;
+        private MapIcon currentPosIcon;
         private Controller controller;
 
         public GPS()
         {
             this.InitializeComponent();
+            currentPosIcon = new MapIcon();
+            currentPosIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
+            currentPosIcon.Title = "Current position";
+            currentPosIcon.ZIndex = 4;
+            map.MapElements.Add(currentPosIcon);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             controller = (Controller)e.Parameter;
             controller.dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
-            mapIcon = new MapIcon();
         }
 
 
         private async void Center_Click(object sender, RoutedEventArgs e)
         {
-            if (controller.dataHandler.locator == null)
-            {
-                controller.dataHandler.locator = new Geolocator
-                {
-                    DesiredAccuracy = PositionAccuracy.High,
-                    MovementThreshold = 1
-                };
-
-            }
-            Geoposition d = await controller.dataHandler.locator.GetGeopositionAsync();
-            var pos = new Geopoint(d.Coordinate.Point.Position);
-
-            mapIcon.Location = pos;
-            mapIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
-            mapIcon.Title = "Current position";
-            mapIcon.ZIndex = 4;
-            map.MapElements.Add(mapIcon);
-
-            await map.TrySetViewAsync(pos, 17);
+            currentPosIcon.Location = controller.currentPosition.Coordinate.Point;
+            await map.TrySetViewAsync(controller.currentPosition.Coordinate.Point, 17);
         }
 
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            Geoposition currentPosition = await controller.dataHandler.locator.GetGeopositionAsync();
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                mapIcon.Location = currentPosition.Coordinate.Point;
-            });
-
-            await map.TrySetViewAsync(currentPosition.Coordinate.Point, 17);
-
+            currentPosIcon.Location = controller.currentPosition.Coordinate.Point;
             if (controller.dataHandler.isWalking)
-                controller.dataHandler.currentRoute.Add(currentPosition);
-            if (controller.dataHandler.currentRoute.Count >= 2)
             {
-                var color = Colors.Gray;
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+
+                await map.TrySetViewAsync(controller.currentPosition.Coordinate.Point, 17);
+
+                if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
                 {
-                    var walkedLine = new MapPolyline
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        StrokeThickness = 11,
-                        StrokeColor = color,
-                        StrokeDashed = false,
-                        ZIndex = 3
-                    };
+                        MapPolyline walkedLine = new MapPolyline
+                        {
+                            StrokeThickness = 11,
+                            StrokeColor = Colors.Gray,
+                            StrokeDashed = false,
+                            ZIndex = 3
+                        };
 
-                    List<BasicGeoposition> tempList = new List<BasicGeoposition>();
+                        List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
 
-                    foreach (Geoposition item in controller.dataHandler.currentRoute)
-                    {
-                        tempList.Add(item.Coordinate.Point.Position);
-                    }
+                        foreach (Geoposition item in controller.dataHandler.currentRoute.routePoints)
+                        {
+                            basicPositionList.Add(item.Coordinate.Point.Position);
+                        }
 
-                    walkedLine.Path = new Geopath(tempList);
-                    if (LatestwalkedLine != null)
-                    {
-                        map.MapElements.Remove(LatestwalkedLine);
-                        LatestwalkedLine = walkedLine;
-                    }
-                    else
-                    {
-                        LatestwalkedLine = walkedLine;
-                    }
-                    map.MapElements.Add(LatestwalkedLine);
-                });
+                        walkedLine.Path = new Geopath(basicPositionList);
+
+                        map.MapElements.Add(walkedLine);
+                    });
+                }
             }
         }
 

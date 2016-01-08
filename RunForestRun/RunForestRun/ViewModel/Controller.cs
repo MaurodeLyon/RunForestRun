@@ -14,6 +14,10 @@ namespace RunForestRun.ViewModel
     class Controller : INotifyPropertyChanged
     {
         private string _tijd;
+        private string _afstand;
+        private string _snelheid;
+        private string _tempo;
+        private DataHandler _dataHandler;
 
         public string tijd
         {
@@ -24,9 +28,6 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
-
-        private string _afstand;
-
         public string afstand
         {
             get { return _afstand; }
@@ -36,9 +37,6 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
-
-        private string _snelheid;
-
         public string snelheid
         {
             get { return _snelheid; }
@@ -48,9 +46,6 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
-
-        private string _tempo;
-
         public string tempo
         {
             get { return _tempo; }
@@ -60,52 +55,74 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        internal void startRecording()
-        {
-            dataHandler.isWalking = true;
-        }
-
-        private DataHandler _dataHandler;
-
         public DataHandler dataHandler
         {
             get { return _dataHandler; }
             set { _dataHandler = value; }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         public Controller()
         {
             dataHandler = new DataHandler();
-            dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
             _snelheid = "0";
             _afstand = "0";
             _tempo = "0";
             _tijd = "0";
+            dataHandler.locator.PositionChanged += locationChanged;
         }
 
-        private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        internal void toggleRecording()
         {
-            Geoposition currentPosition = await dataHandler.locator.GetGeopositionAsync();
-            List<Geopoint> tempList = new List<Geopoint>();
-
-            List<Geoposition> tempPos = new List<Geoposition>(dataHandler.currentRoute);
-            foreach (Geoposition item in tempPos)
+            dataHandler.isWalking = !dataHandler.isWalking;
+            switch (dataHandler.isWalking)
             {
-                tempList.Add(item.Coordinate.Point);
+                case true:
+                    dataHandler.currentRoute = new Route();
+                    break;
+                case false:
+                    if (dataHandler.currentRoute.routePoints.Count > 5)
+                    {
+                        dataHandler.currentRoute.eindTijd = DateTime.Now;
+                        dataHandler.manifest.Add(dataHandler.currentRoute);
+                        Library.FileIO.SaveManifest(dataHandler.manifest);
+                    }
+                    break;
             }
+        }
 
-            if (tempList.Count >= 2)
+        public Geoposition currentPosition;
+
+        private async void locationChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            currentPosition = await dataHandler.locator.GetGeopositionAsync();
+            loadInfoPage();
+            if (dataHandler.isWalking)
+                recording();
+        }
+
+        private async void loadInfoPage()
+        {
+            List<Geopoint> currentGeopoints = new List<Geopoint>();
+
+            foreach (Geoposition item in dataHandler.currentRoute.routePoints)
+                currentGeopoints.Add(item.Coordinate.Point);
+
+            if (currentGeopoints.Count >= 2)
             {
-                MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(tempList);
+                MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(currentGeopoints);
                 afstand = (routeResult.Route.LengthInMeters).ToString();
             }
 
             tijd = DateTime.Now.ToString();
             snelheid = currentPosition.Coordinate.Speed.ToString();
             tempo = 10.ToString();
+        }
+
+        private void recording()
+        {
+            dataHandler.currentRoute.routePoints.Add(currentPosition);
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
