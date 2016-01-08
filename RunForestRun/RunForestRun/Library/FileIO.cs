@@ -7,24 +7,37 @@ using Newtonsoft.Json.Linq;
 using Windows.Storage;
 using System.IO;
 using Newtonsoft.Json;
+using RunForestRun.Model;
 
 namespace RunForestRun.Library
 {
-    class FileIO
+    public class FileIO
     {
-        public static async void Save(string filename, string contents)
+        //
+        // save/load manifest
+        //
+        public static async void SaveManifest(List<Route> manifest)
         {
-            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile sampleFile = await storageFolder.CreateFileAsync(filename+ ".data", Windows.Storage.CreationCollisionOption.ReplaceExisting);
-            await Windows.Storage.FileIO.WriteTextAsync(sampleFile, contents);
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            string serializedManifest = JsonConvert.SerializeObject(manifest);
+            StorageFile manifestFile = await storageFolder.CreateFileAsync("Manifest.txt", CreationCollisionOption.ReplaceExisting);
+            await Windows.Storage.FileIO.WriteTextAsync(manifestFile, serializedManifest);
         }
 
-        public static async Task<string> Load(string filename)
+        public static async Task<List<Route>> LoadManifest()
         {
-            Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            Windows.Storage.StorageFile sampleFile = await storageFolder.GetFileAsync("sample.txt");
-            String contents = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
-            return contents;
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile manifest;
+            try
+            {
+                manifest = await storageFolder.GetFileAsync("Manifest.txt");
+            }
+            catch (FileNotFoundException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("error loading manifest: " + ex);
+                return null;
+            }
+            return JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
         }
     }
 }

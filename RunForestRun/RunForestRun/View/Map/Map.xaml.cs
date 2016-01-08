@@ -44,7 +44,7 @@ namespace RunForestRun.View
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            controller.startRecording();
+            controller.toggleRecording();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
