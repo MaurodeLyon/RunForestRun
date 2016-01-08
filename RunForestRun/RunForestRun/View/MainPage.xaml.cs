@@ -1,4 +1,5 @@
-﻿using RunForestRun.View;
+﻿using RunForestRun.Model;
+using RunForestRun.View;
 using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,17 @@ namespace RunForestRun
         public MainPage()
         {
             this.InitializeComponent();
+            Library.FileIO.testSave();
+            Route route = new Route("a");
+            List<Route> routes = new List<Route>();
+            routes.Add(route);
+            routes.Add(route);
+            routes.Add(route);
+            Library.FileIO.SaveRoutes(new List<Route>(routes));
             PageName.Text = "Map";
+            var a = Library.FileIO.LoadRoutes();
             controller = new Controller();
-            myFrame.Navigate(typeof(Map), controller);
+            innerFrame.Navigate(typeof(Map), controller);
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -43,17 +52,17 @@ namespace RunForestRun
             if (Map.IsSelected)
             {
                 PageName.Text = "Map";
-                myFrame.Navigate(typeof(Map), controller);
+                innerFrame.Navigate(typeof(Map), controller);
             }
             else if (Save.IsSelected)
             {
                 PageName.Text = "Load";
-                myFrame.Navigate(typeof(Load), controller);
+                innerFrame.Navigate(typeof(Load), controller);
             }
             else if (Compare.IsSelected)
             {
                 PageName.Text = "Compare";
-                myFrame.Navigate(typeof(MainPage), controller);
+                innerFrame.Navigate(typeof(MainPage), controller);
             }
         }
     }

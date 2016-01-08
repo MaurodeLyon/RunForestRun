@@ -45,7 +45,7 @@
                 </ListBox>
             </SplitView.Pane>
             <SplitView.Content>
-                <Frame Name="myFrame"/>
+                <Frame Name="innerFrame"/>
             </SplitView.Content>
         </SplitView>
     </Grid>
