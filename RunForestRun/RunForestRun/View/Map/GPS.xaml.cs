@@ -1,4 +1,5 @@
-﻿using RunForestRun.ViewModel;
+﻿using RunForestRun.Library;
+using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,8 +55,8 @@ namespace RunForestRun.View
         {
             if (controller.currentPosition != null)
             {
-                currentPosIcon.Location = controller.currentPosition;
-                await map.TrySetViewAsync(controller.currentPosition, 17);
+                currentPosIcon.Location = controller.currentPosition.Point;
+                await map.TrySetViewAsync(controller.currentPosition.Point, 17);
 
             }
         }
@@ -66,12 +67,12 @@ namespace RunForestRun.View
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    currentPosIcon.Location = controller.currentPosition;
+                    currentPosIcon.Location = controller.currentPosition.Point;
                 });
                 if (controller.dataHandler.isWalking)
                 {
 
-                    await map.TrySetViewAsync(controller.currentPosition, 17);
+                    await map.TrySetViewAsync(controller.currentPosition.Point, 17);
 
                     if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
                     {
@@ -87,9 +88,9 @@ namespace RunForestRun.View
 
                             List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
 
-                            foreach (Geopoint item in controller.dataHandler.currentRoute.routePoints)
+                            foreach (Waypoint item in controller.dataHandler.currentRoute.routePoints)
                             {
-                                basicPositionList.Add(item.Position);
+                                basicPositionList.Add(new BasicGeoposition() { Latitude = item.latitude, Longitude = item.longitude });
                             }
 
                             walkedLine.Path = new Geopath(basicPositionList);

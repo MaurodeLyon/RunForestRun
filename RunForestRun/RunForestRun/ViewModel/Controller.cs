@@ -11,6 +11,7 @@ using Windows.Services.Maps;
 using Windows.UI.Core;
 using System.ServiceModel;
 using Windows.UI.Xaml;
+using RunForestRun.Library;
 
 namespace RunForestRun.ViewModel
 {
@@ -77,12 +78,6 @@ namespace RunForestRun.ViewModel
             checkPosition();
         }
 
-        private async void checkPosition()
-        {
-            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
-            currentPosition = update.Coordinate.Point;
-        }
-
         internal void toggleRecording()
         {
             dataHandler.isWalking = !dataHandler.isWalking;
@@ -102,12 +97,18 @@ namespace RunForestRun.ViewModel
             }
         }
 
-        public Geopoint currentPosition;
+        public Geocoordinate currentPosition;
+
+        private async void checkPosition()
+        {
+            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
+            currentPosition = update.Coordinate;
+        }
 
         private async void locationChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             Geoposition update = await dataHandler.locator.GetGeopositionAsync();
-            currentPosition = update.Coordinate.Point;
+            currentPosition = update.Coordinate;
             loadInfoPage();
             if (dataHandler.isWalking)
                 recording();
@@ -117,7 +118,7 @@ namespace RunForestRun.ViewModel
         {
             if (dataHandler.currentRoute.routePoints.Count >= 2)
             {
-                MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(dataHandler.currentRoute.routePoints);
+                MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
                 afstand = (routeResult.Route.LengthInMeters).ToString();
             }
 
@@ -128,7 +129,7 @@ namespace RunForestRun.ViewModel
 
         private void recording()
         {
-            dataHandler.currentRoute.routePoints.Add(currentPosition);
+            dataHandler.currentRoute.routePoints.Add(new Waypoint(currentPosition.Point.Position.Latitude, currentPosition.Point.Position.Longitude, currentPosition.Speed, currentPosition.Timestamp));
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -136,6 +137,17 @@ namespace RunForestRun.ViewModel
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
             this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private List<Geopoint> createGeoPointList()
+        {
+            List<Geopoint> toCreate = new List<Geopoint>();
+            foreach (Waypoint w in dataHandler.currentRoute.routePoints)
+            {
+                toCreate.Add(new Geopoint(new BasicGeoposition() { Longitude = w.longitude, Latitude = w.latitude }));
+            }
+            return toCreate;
+        }
+
     }
 }
 
