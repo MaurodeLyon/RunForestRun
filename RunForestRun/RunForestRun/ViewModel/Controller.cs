@@ -20,7 +20,6 @@ namespace RunForestRun.ViewModel
         private string _tijd;
         private string _afstand;
         private string _snelheid;
-        private string _tempo;
         private DataHandler _dataHandler;
 
         public string tijd
@@ -50,15 +49,6 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
-        public string tempo
-        {
-            get { return _tempo; }
-            set
-            {
-                _tempo = value;
-                this.OnPropertyChanged();
-            }
-        }
         public DataHandler dataHandler
         {
             get { return _dataHandler; }
@@ -72,7 +62,6 @@ namespace RunForestRun.ViewModel
             dataHandler = DataHandler.getDataHandler();
             _snelheid = "0";
             _afstand = "0";
-            _tempo = "0";
             _tijd = "0";
             dataHandler.locator.PositionChanged += locationChanged;
             checkPosition();
@@ -119,26 +108,30 @@ namespace RunForestRun.ViewModel
             if (dataHandler.currentRoute.routePoints.Count >= 2)
             {
                 MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
-                afstand = (routeResult.Route.LengthInMeters).ToString();
+                afstand = Math.Round((routeResult.Route.LengthInMeters / 1000),2).ToString();
             }
             TimeSpan test = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
             int hours = test.Hours;
             int minutes = test.Minutes;
             int seconds = test.Seconds;
             String Hours, Minutes, Seconds;
-            if(hours < 10)
-            Hours = "0" + hours;
-            else { Hours = ""+ hours; }
-            if(minutes<10)
-            Minutes = "0" + minutes;
+            if (hours < 10)
+                Hours = "0" + hours;
+            else { Hours = "" + hours; }
+            if (minutes < 10)
+                Minutes = "0" + minutes;
             else { Minutes = "" + minutes; }
             if (seconds < 10)
-            Seconds = "0" + seconds;
+                Seconds = "0" + seconds;
             else { Seconds = "" + seconds; }
-
-            tijd = Hours+ ":" + Minutes + ":" + Seconds;
-            snelheid = "♥";
-            tempo = "♥";
+            double speed = 0;
+            if (currentPosition.Speed.HasValue)
+            {
+                Double.TryParse(currentPosition.Speed.Value.ToString(),out speed);
+                speed = Math.Round(speed, 0);
+            }
+            tijd = Hours + ":" + Minutes + ":" + Seconds;
+            snelheid = speed.ToString();
         }
 
         private void recording()
@@ -149,9 +142,9 @@ namespace RunForestRun.ViewModel
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-           
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-           
+
+            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+
 
         }
 

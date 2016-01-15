@@ -16,8 +16,8 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="Black" BorderThickness="5">
-            <Grid Grid.Row="0" Grid.Column="0">
+        <Border BorderBrush="Black" BorderThickness="5" Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid Grid.Row="0" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -31,8 +31,8 @@
         </Border>
 
 
-        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="5">
-            <Grid Grid.Row="0" Grid.Column="1">
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="5">
+            <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -55,19 +55,6 @@
                 <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Name="Snelheid" Text="{Binding snelheid}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
                     <TextBlock Name="SnelheidEenheid"  Text="m/s" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="5">
-            <Grid Grid.Row="1" Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Tempo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="35"/>
-                <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Name="Tempo" Text="{Binding tempo}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
-                    <TextBlock Name="TempoEenheid"  Text="min/km" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
                 </StackPanel>
             </Grid>
         </Border>
