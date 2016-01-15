@@ -100,6 +100,12 @@ namespace RunForestRun.View
                     }
                 }
             }
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+               controller.loadInfoPage(); 
+            });
+            
         }
 
         private async void TestRoute_Click(object sender, RoutedEventArgs e)
