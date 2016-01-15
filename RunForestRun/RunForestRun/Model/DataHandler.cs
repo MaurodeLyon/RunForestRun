@@ -15,6 +15,9 @@ namespace RunForestRun.Model
         private List<Route> _manifest;
         private Route _currentRoute;
         private bool _isWalking;
+        private Route _routeToCompare;
+
+        
 
         public Geolocator locator
         {
@@ -35,6 +38,11 @@ namespace RunForestRun.Model
         {
             get { return _isWalking; }
             set { _isWalking = value; }
+        }
+        public Route routeToCompare
+        {
+            get { return _routeToCompare; }
+            set { _routeToCompare = value; }
         }
 
         private DataHandler()
