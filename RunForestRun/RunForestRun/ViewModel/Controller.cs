@@ -108,20 +108,34 @@ namespace RunForestRun.ViewModel
         {
             Geoposition update = await dataHandler.locator.GetGeopositionAsync();
             currentPosition = update.Coordinate.Point;
-            loadInfoPage();
+            //loadInfoPage();
             if (dataHandler.isWalking)
                 recording();
         }
 
-        private async void loadInfoPage()
+        public async void loadInfoPage()
         {
             if (dataHandler.currentRoute.routePoints.Count >= 2)
             {
                 MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(dataHandler.currentRoute.routePoints);
-                afstand = (routeResult.Route.LengthInMeters).ToString();
+                afstand = Math.Round((routeResult.Route.LengthInMeters / 1000),2).ToString();
             }
+            TimeSpan test = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
+            int hours = test.Hours;
+            int minutes = test.Minutes;
+            int seconds = test.Seconds;
+            String Hours, Minutes, Seconds;
+            if(hours < 10)
+            Hours = "0" + hours;
+            else { Hours = ""+ hours; }
+            if(minutes<10)
+            Minutes = "0" + minutes;
+            else { Minutes = "" + minutes; }
+            if (seconds < 10)
+            Seconds = "0" + seconds;
+            else { Seconds = "" + seconds; }
 
-            tijd = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay).ToString();
+            tijd = Hours+ ":" + Minutes + ":" + Seconds;
             snelheid = "♥";
             tempo = "♥";
         }
@@ -134,7 +148,10 @@ namespace RunForestRun.ViewModel
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+           
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+           
+
         }
     }
 }
