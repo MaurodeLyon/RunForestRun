@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RunForestRun.Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace RunForestRun.Model
         private string _naam;
         private DateTime _beginTijd;
         private DateTime _eindTijd;
-        private List<Geopoint> _routePoints;
+        private List<Waypoint> _routePoints;
 
         public string naam
         {
@@ -29,7 +30,7 @@ namespace RunForestRun.Model
             get { return _beginTijd; }
             set { _beginTijd = value; }
         }
-        public List<Geopoint> routePoints
+        public List<Waypoint> routePoints
         {
             get { return _routePoints; }
             set { _routePoints = value; }
@@ -38,10 +39,10 @@ namespace RunForestRun.Model
         public Route()
         {
             _beginTijd = DateTime.Now;
-            _routePoints = new List<Geopoint>();
+            _routePoints = new List<Waypoint>();
         }
 
-        public Route(string naam,DateTime begintijd,DateTime eindtijd,List<Geopoint> routePoints)
+        public Route(string naam,DateTime begintijd,DateTime eindtijd,List<Waypoint> routePoints)
         {
             _naam = naam;
             _beginTijd = begintijd;
