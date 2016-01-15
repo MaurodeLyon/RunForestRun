@@ -108,7 +108,7 @@ namespace RunForestRun.ViewModel
         private async void locationChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             Geoposition update = await dataHandler.locator.GetGeopositionAsync();
-            currentPosition = update.Coordinate.Point;
+            currentPosition = update.Coordinate;
             //loadInfoPage();
             if (dataHandler.isWalking)
                 recording();
