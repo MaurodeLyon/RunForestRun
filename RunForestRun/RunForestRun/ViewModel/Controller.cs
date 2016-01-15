@@ -68,7 +68,7 @@ namespace RunForestRun.ViewModel
 
         public Controller()
         {
-            dataHandler = new DataHandler();
+            dataHandler = DataHandler.getDataHandler();
             _snelheid = "0";
             _afstand = "0";
             _tempo = "0";

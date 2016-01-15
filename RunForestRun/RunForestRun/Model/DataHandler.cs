@@ -10,6 +10,7 @@ namespace RunForestRun.Model
 {
     class DataHandler
     {
+        private static DataHandler dataHandler;
         private Geolocator _locator;
         private List<Route> _manifest;
         private Route _currentRoute;
@@ -36,7 +37,7 @@ namespace RunForestRun.Model
             set { _isWalking = value; }
         }
 
-        public DataHandler()
+        private DataHandler()
         {
             _locator = new Geolocator();
             _currentRoute = new Route();
@@ -47,6 +48,15 @@ namespace RunForestRun.Model
         private async void loadManifest()
         {
             _manifest = await Library.FileIO.LoadManifest();
+        }
+
+        public static DataHandler getDataHandler()
+        {
+            if (dataHandler == null)
+            {
+                dataHandler = new DataHandler();
+            }
+            return dataHandler;
         }
     }
 }

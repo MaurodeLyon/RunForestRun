@@ -40,5 +40,13 @@ namespace RunForestRun.Model
             _beginTijd = DateTime.Now;
             _routePoints = new List<Geopoint>();
         }
+
+        public Route(string naam,DateTime begintijd,DateTime eindtijd,List<Geopoint> routePoints)
+        {
+            _naam = naam;
+            _beginTijd = begintijd;
+            _eindTijd = eindTijd;
+            _routePoints = routePoints;
+        }
     }
 }
