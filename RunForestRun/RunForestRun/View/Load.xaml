@@ -13,16 +13,7 @@
             <RowDefinition Height="*" ></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView Grid.Row="0" ItemsSource="{x:Bind RouteList}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" IsItemClickEnabled="True">
-            <ListView.ItemTemplate>
-                <DataTemplate  x:DataType="model:Route">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="Routename" Height="25"  Text="{x:Bind naam}" FontSize="20"/>
-                        <TextBlock x:Name="RouteStart" Height="25" Text="{x:Bind beginTijd}" FontSize="10"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <ListView Grid.Row="0" ItemsSource="{x:Bind selectableList}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" IsItemClickEnabled="True" SelectionChanged="ListView_SelectionChanged"/>
         <Button Grid.Row="1"  Name="Info" FontFamily="Segoe MDL2 Assets" Content="&#xE898;" FontSize ="36" HorizontalAlignment="Stretch" Click="Info_Click"/>
     </Grid>
 </Page>

@@ -44,6 +44,12 @@ namespace RunForestRun
 
         private async void checkForManifest()
         {
+           /* List<Route> manifest = null;
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            string serializedManifest = JsonConvert.SerializeObject(manifest);
+            StorageFile manifestFile = await storageFolder.CreateFileAsync("Manifest.txt", CreationCollisionOption.ReplaceExisting);
+            await Windows.Storage.FileIO.WriteTextAsync(manifestFile, serializedManifest);*/
+            
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
             StorageFile manifest;
             List<Route> a = null;

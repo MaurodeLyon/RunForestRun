@@ -49,5 +49,9 @@ namespace RunForestRun.Model
             _eindTijd = eindTijd;
             _routePoints = routePoints;
         }
+        public override string ToString()
+        {
+            return _beginTijd.ToString(); ; 
+        }
     }
 }

@@ -2,6 +2,7 @@
 using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,6 +27,7 @@ namespace RunForestRun.View
     {
         public List<Route> RouteList;
         private Controller controller;
+        public ObservableCollection<string> selectableList = new ObservableCollection<string>();
 
         public Load()
         {
@@ -34,7 +36,7 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -43,6 +45,13 @@ namespace RunForestRun.View
             controller = (Controller)e.Parameter;
             controller.dataHandler.manifest = await Library.FileIO.LoadManifest();
             RouteList = controller.dataHandler.manifest;
+            foreach (Route item in RouteList)
+                selectableList.Add(item.beginTijd.ToString());
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var a = e.AddedItems;
         }
     }
 }

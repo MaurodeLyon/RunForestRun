@@ -37,7 +37,11 @@ namespace RunForestRun.Library
                 System.Diagnostics.Debug.WriteLine("error loading manifest: " + ex);
                 return null;
             }
-            return JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
+            List<Route> routes = JsonConvert.DeserializeObject<List<Route>>(await Windows.Storage.FileIO.ReadTextAsync(manifest));
+            if (routes == null)
+                return new List<Route>();
+            else
+                return routes;
         }
     }
 }
