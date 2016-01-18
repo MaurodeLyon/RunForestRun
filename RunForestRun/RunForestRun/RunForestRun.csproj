@@ -103,6 +103,7 @@
     <Compile Include="Model\DataHandler.cs" />
     <Compile Include="Library\Route.cs" />
     <Compile Include="ViewModel\Controller.cs" />
+    <Compile Include="ViewModel\RouteInfoViewModel.cs" />
     <Compile Include="View\Compare.xaml.cs">
       <DependentUpon>Compare.xaml</DependentUpon>
     </Compile>

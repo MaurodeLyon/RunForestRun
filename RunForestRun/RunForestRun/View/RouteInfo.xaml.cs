@@ -1,4 +1,5 @@
 ﻿using RunForestRun.Model;
+using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,20 +24,16 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class RouteInfo : Page
     {
-        private Route route;
-        public string name;
-
+        public RouteInfoViewModel ViewModel;
         public RouteInfo()
         {
             this.InitializeComponent();
-            name = "♥♥♥♥♥♥♥♥♥♥♥♥";
+            ViewModel = new RouteInfoViewModel();
         }
 
        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            route = (Route)e.Parameter;
-            //name = route.beginTijd.ToString();
         }
     }
 }

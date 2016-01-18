@@ -40,6 +40,7 @@ namespace RunForestRun.View
             foreach (Route route in RouteList)
                 if (route.beginTijd.ToString() == selectedList.ToString())
                 {
+                    DataHandler.getDataHandler().infoRoute = route;
                     innerFrame.Navigate(typeof(RouteInfo), route);
                 }
         }
