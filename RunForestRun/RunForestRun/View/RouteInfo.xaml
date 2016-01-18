@@ -11,6 +11,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Binding name}" />
+        <TextBlock Grid.Row="0" Text="{x:Bind Path=name}" DataContext="{Binding name}"/>
     </Grid>
 </Page>

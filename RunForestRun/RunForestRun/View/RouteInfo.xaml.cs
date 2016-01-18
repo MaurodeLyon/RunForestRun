@@ -29,14 +29,14 @@ namespace RunForestRun.View
         public RouteInfo()
         {
             this.InitializeComponent();
-            DataContext = this;
+            name = "♥♥♥♥♥♥♥♥♥♥♥♥";
         }
 
        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             route = (Route)e.Parameter;
-            name = route.beginTijd.ToString();
+            //name = route.beginTijd.ToString();
         }
     }
 }
