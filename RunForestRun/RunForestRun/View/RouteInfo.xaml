@@ -9,15 +9,30 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView ItemsSource="{x:Bind ViewModel.Waypoints}" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ListView ItemsSource="{x:Bind ViewModel.Waypoints}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:Waypoint">
-                    <StackPanel>
-                        <TextBlock Text="{x:Bind latitude}"/>
-                        <TextBlock Text="{x:Bind longitude}"/>
-                        <TextBlock Text="{x:Bind speed}"/>
-                        <TextBlock Text="{x:Bind timestamp}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{x:Bind timestamp}" HorizontalAlignment="Center" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Latitude: "  HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Longitude: " HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Speed: " HorizontalAlignment="Left"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind latitude}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="2" Text="{x:Bind longitude}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="3" Text="{x:Bind speed}"/>
+                        </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
