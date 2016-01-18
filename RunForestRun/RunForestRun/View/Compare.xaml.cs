@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RunForestRun.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,9 +24,30 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Compare : Page
     {
+        public List<Route> RouteList;
+        public ObservableCollection<string> selectableList = new ObservableCollection<string>();
+
         public Compare()
         {
             this.InitializeComponent();
+        }
+
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedList = list.SelectedItem as string;
+            foreach (Route item in RouteList)
+                if (item.beginTijd.ToString() == selectedList.ToString())
+                    DataHandler.getDataHandler().routeToCompare = item;
+        }
+
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
+            RouteList = DataHandler.getDataHandler().manifest;
+            foreach (Route item in RouteList)
+                selectableList.Add(item.beginTijd.ToString());
         }
     }
 }

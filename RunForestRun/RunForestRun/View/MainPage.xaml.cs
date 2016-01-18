@@ -49,12 +49,12 @@ namespace RunForestRun
             else if (Save.IsSelected)
             {
                 PageName.Text = "Load";
-                innerFrame.Navigate(typeof(Load), controller);
+                innerFrame.Navigate(typeof(Load), innerFrame);
             }
             else if (Compare.IsSelected)
             {
                 PageName.Text = "Compare";
-                innerFrame.Navigate(typeof(MainPage), controller);
+                innerFrame.Navigate(typeof(Compare));
             }
         }
     }

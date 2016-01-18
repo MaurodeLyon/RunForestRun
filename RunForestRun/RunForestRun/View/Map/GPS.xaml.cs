@@ -101,7 +101,7 @@ namespace RunForestRun.View
                 }
             }
 
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                controller.loadInfoPage(); 
             });

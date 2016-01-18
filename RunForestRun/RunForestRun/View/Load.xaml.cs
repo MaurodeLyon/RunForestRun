@@ -25,8 +25,8 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Load : Page
     {
+        private Frame innerFrame;
         public List<Route> RouteList;
-        private Controller controller;
         public ObservableCollection<string> selectableList = new ObservableCollection<string>();
 
         public Load()
@@ -36,22 +36,23 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-
+            string selectedList = list.SelectedItem as string;
+            foreach (Route route in RouteList)
+                if (route.beginTijd.ToString() == selectedList.ToString())
+                {
+                    DataHandler.getDataHandler().infoRoute = route;
+                    innerFrame.Navigate(typeof(RouteInfo), route);
+                }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            controller = (Controller)e.Parameter;
-            controller.dataHandler.manifest = await Library.FileIO.LoadManifest();
-            RouteList = controller.dataHandler.manifest;
+            innerFrame = (Frame)e.Parameter;
+            DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
+            RouteList = DataHandler.getDataHandler().manifest;
             foreach (Route item in RouteList)
                 selectableList.Add(item.beginTijd.ToString());
-        }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var a = e.AddedItems;
         }
     }
 }

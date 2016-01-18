@@ -103,6 +103,7 @@
     <Compile Include="Model\DataHandler.cs" />
     <Compile Include="Library\Route.cs" />
     <Compile Include="ViewModel\Controller.cs" />
+    <Compile Include="ViewModel\RouteInfoViewModel.cs" />
     <Compile Include="View\Compare.xaml.cs">
       <DependentUpon>Compare.xaml</DependentUpon>
     </Compile>
@@ -121,6 +122,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Map\Map.xaml.cs">
       <DependentUpon>Map.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RouteInfo.xaml.cs">
+      <DependentUpon>RouteInfo.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +169,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Map\Map.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RouteInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
