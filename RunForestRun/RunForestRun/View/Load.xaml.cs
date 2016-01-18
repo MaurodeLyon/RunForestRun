@@ -26,7 +26,6 @@ namespace RunForestRun.View
     public sealed partial class Load : Page
     {
         public List<Route> RouteList;
-        private Controller controller;
         public ObservableCollection<string> selectableList = new ObservableCollection<string>();
 
         public Load()
@@ -36,22 +35,19 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-
+            string selectedList = list.SelectedItem as string;
+            foreach (Route item in RouteList)
+                if (item.beginTijd.ToString() == selectedList.ToString())
+                    DataHandler.getDataHandler().routeToCompare = item;
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            controller = (Controller)e.Parameter;
-            controller.dataHandler.manifest = await Library.FileIO.LoadManifest();
-            RouteList = controller.dataHandler.manifest;
+            DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
+            RouteList = DataHandler.getDataHandler().manifest;
             foreach (Route item in RouteList)
                 selectableList.Add(item.beginTijd.ToString());
-        }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var a = e.AddedItems;
         }
     }
 }
