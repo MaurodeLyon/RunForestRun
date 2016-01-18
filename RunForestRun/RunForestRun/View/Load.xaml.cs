@@ -25,6 +25,7 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class Load : Page
     {
+        private Frame innerFrame;
         public List<Route> RouteList;
         public ObservableCollection<string> selectableList = new ObservableCollection<string>();
 
@@ -36,14 +37,18 @@ namespace RunForestRun.View
         private void Info_Click(object sender, RoutedEventArgs e)
         {
             string selectedList = list.SelectedItem as string;
-            foreach (Route item in RouteList)
-                if (item.beginTijd.ToString() == selectedList.ToString())
-                    DataHandler.getDataHandler().routeToCompare = item;
+            foreach (Route route in RouteList)
+                if (route.beginTijd.ToString() == selectedList.ToString())
+                {
+                    DataHandler.getDataHandler().routeToCompare = route;
+                    innerFrame.Navigate(typeof(RouteInfo), route);
+                }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            innerFrame = (Frame)e.Parameter;
             DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
             RouteList = DataHandler.getDataHandler().manifest;
             foreach (Route item in RouteList)
