@@ -23,8 +23,8 @@ namespace RunForestRun.View
     /// </summary>
     public sealed partial class RouteInfo : Page
     {
-       // private Route route;
-       // public string name;
+        private Route route;
+        public string name;
 
         public RouteInfo()
         {
@@ -32,11 +32,11 @@ namespace RunForestRun.View
             DataContext = this;
         }
 
-      /*  protected override void OnNavigatedTo(NavigationEventArgs e)
+       protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             route = (Route)e.Parameter;
             name = route.beginTijd.ToString();
-        }*/
+        }
     }
 }
