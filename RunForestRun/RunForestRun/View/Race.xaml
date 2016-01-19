@@ -13,24 +13,34 @@
                 <TextBlock Text="Current Route" HorizontalAlignment="Center" FontSize="35"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding afstand}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Avg. Speed:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="Speed:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding snelheid}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding tijd}" FontSize="25" Margin="5,20,0,0"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
                 <TextBlock Text="Logged Route" HorizontalAlignment="Center" FontSize="35"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding logAfstand}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Avg. Speed:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding logSnelheid}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding logTijd}" FontSize="25" Margin="5,20,0,0"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

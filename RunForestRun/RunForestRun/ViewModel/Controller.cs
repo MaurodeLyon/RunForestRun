@@ -24,6 +24,39 @@ namespace RunForestRun.ViewModel
 
         public Boolean GeoFencingSetup = false;
 
+        public String logTijd
+        {
+            get { TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+                return t.ToString().Split('.')[0];
+            }
+        }
+
+        public String logAfstand
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+
+                double afstand = t.TotalSeconds* double.Parse(logSnelheid);
+                afstand = afstand / 1000;
+                afstand = Math.Round(afstand, 2);
+                return afstand.ToString();
+            }
+        }
+
+        public String logSnelheid
+        {
+            get {
+                double total = 0;
+                foreach (Waypoint wp in _dataHandler.routeToCompare.routePoints)
+                    total += (double)wp.speed;
+                total = total / _dataHandler.routeToCompare.routePoints.Count;
+                return Math.Round(total, 2).ToString();
+                
+            }
+        }
+
+
         public string tijd
         {
             get { return _tijd; }
@@ -42,6 +75,8 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
+
+
         public string snelheid
         {
             get { return _snelheid; }
