@@ -22,6 +22,8 @@ namespace RunForestRun.ViewModel
         private string _snelheid;
         private DataHandler _dataHandler;
 
+        public Boolean GeoFencingSetup = false;
+
         public string tijd
         {
             get { return _tijd; }
@@ -150,6 +152,7 @@ namespace RunForestRun.ViewModel
 
         private List<Geopoint> createGeoPointList()
         {
+            // TODO: createGeoPointList can give a InvalidOperationException at random moments. Needs fixing 
             List<Geopoint> toCreate = new List<Geopoint>();
             foreach (Waypoint w in dataHandler.currentRoute.routePoints)
             {
