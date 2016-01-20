@@ -22,6 +22,41 @@ namespace RunForestRun.ViewModel
         private string _snelheid;
         private DataHandler _dataHandler;
 
+        public Boolean GeoFencingSetup = false;
+
+        public String logTijd
+        {
+            get { TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+                return t.ToString().Split('.')[0];
+            }
+        }
+
+        public String logAfstand
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+
+                double afstand = t.TotalSeconds* double.Parse(logSnelheid);
+                afstand = afstand / 1000;
+                afstand = Math.Round(afstand, 2);
+                return afstand.ToString();
+            }
+        }
+
+        public String logSnelheid
+        {
+            get {
+                double total = 0;
+                foreach (Waypoint wp in _dataHandler.routeToCompare.routePoints)
+                    total += (double)wp.speed;
+                total = total / _dataHandler.routeToCompare.routePoints.Count;
+                return Math.Round(total, 2).ToString();
+                
+            }
+        }
+
+
         public string tijd
         {
             get { return _tijd; }
@@ -40,6 +75,8 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
+
+
         public string snelheid
         {
             get { return _snelheid; }
@@ -150,6 +187,7 @@ namespace RunForestRun.ViewModel
 
         private List<Geopoint> createGeoPointList()
         {
+            // TODO: createGeoPointList can give a InvalidOperationException at random moments. Needs fixing 
             List<Geopoint> toCreate = new List<Geopoint>();
             foreach (Waypoint w in dataHandler.currentRoute.routePoints)
             {
