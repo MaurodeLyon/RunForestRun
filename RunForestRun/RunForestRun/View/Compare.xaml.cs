@@ -36,11 +36,14 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            string selectedList = list.SelectedItem as string;
-            foreach (Route item in RouteList)
-                if (item.beginTijd.ToString() == selectedList.ToString())
-                    DataHandler.getDataHandler().routeToCompare = item;
-            innerFrame.Navigate(typeof(Map));
+            if (list.SelectedItem != null)
+            {
+                string selectedList = list.SelectedItem as string;
+                foreach (Route item in RouteList)
+                    if (item.beginTijd.ToString() == selectedList.ToString())
+                        DataHandler.getDataHandler().routeToCompare = item;
+                innerFrame.Navigate(typeof(Map));
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

@@ -38,19 +38,23 @@ namespace RunForestRun.View
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            string selectedList = list.SelectedItem as string;
-            foreach (Route route in RouteList)
-                if (route.beginTijd.ToString() == selectedList.ToString())
-                {
-                    DataHandler.getDataHandler().infoRoute = route;
-                    innerFrame.Navigate(typeof(RouteInfo), controller);
-                }
+            if (list.SelectedItem != null)
+            {
+                string selectedList = list.SelectedItem as string;
+                foreach (Route route in RouteList)
+                    if (route.beginTijd.ToString() == selectedList.ToString())
+                    {
+                        DataHandler.getDataHandler().infoRoute = route;
+                        innerFrame.Navigate(typeof(RouteInfo), controller);
+                    }
+            }
+
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            RouteInfoWrapper wrap =(RouteInfoWrapper) e.Parameter;
+            RouteInfoWrapper wrap = (RouteInfoWrapper)e.Parameter;
             innerFrame = wrap.frame;
             controller = wrap.controller;
             DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();

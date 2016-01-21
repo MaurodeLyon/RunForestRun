@@ -18,7 +18,7 @@
             <Button Grid.Row="1"  Name="Kaart" FontFamily="Segoe MDL2 Assets" Content="&#xE128;" FontSize ="36" Click="Kaart_Click"/>
             <Button Grid.Row="1" Name="Start" FontFamily="Segoe MDL2 Assets" Content="&#xE101;" FontSize ="36"  RelativePanel.RightOf="Kaart" Click="Start_Click" />
             <Button Grid.Row="1"  Name="Info" FontFamily="Segoe MDL2 Assets" Content="&#xE95E;" FontSize ="36" RelativePanel.RightOf="Start" Click="Info_Click"/>
-            <Button Grid.Row="1"  Name="Race" FontFamily="Segoe MDL2 Assets" Content="&#xE95E;" FontSize ="36" RelativePanel.RightOf="Info" Click="Race_Click"/>
+            <Button Grid.Row="1"  Name="Race" FontFamily="Segoe MDL2 Assets" Content="&#xE92C;" FontSize ="36" RelativePanel.RightOf="Info" Click="Race_Click"/>
         </RelativePanel>
     </Grid>
 </Page>

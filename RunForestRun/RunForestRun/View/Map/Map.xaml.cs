@@ -47,7 +47,8 @@ namespace RunForestRun.View
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            controller.toggleRecording();
+            if (DataHandler.getDataHandler().routeToCompare == null)
+                controller.toggleRecording();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

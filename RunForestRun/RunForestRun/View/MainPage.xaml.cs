@@ -46,6 +46,7 @@ namespace RunForestRun
             {
                 PageName.Text = "Map";
                 innerFrame.Navigate(typeof(Map), controller);
+                DataHandler.getDataHandler().routeToCompare = null;
             }
             else if (Save.IsSelected)
             {

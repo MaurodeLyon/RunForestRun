@@ -39,6 +39,7 @@ namespace RunForestRun.View
         private Controller controller;
         private bool loggedRouteSetup;
         private bool GeoFencingSetup;
+        private bool isCameraMoving;
 
         public GPS()
         {
@@ -50,8 +51,20 @@ namespace RunForestRun.View
             map.MapElements.Add(currentPosIcon);
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             GeoFencingSetup = false;
+            map.ActualCameraChanging += Map_ActualCameraChanging;
+            map.ActualCameraChanged += Map_ActualCameraChanged;
         }
-        
+
+        private void Map_ActualCameraChanged(MapControl sender, MapActualCameraChangedEventArgs args)
+        {
+            isCameraMoving = false;
+        }
+
+        private void Map_ActualCameraChanging(MapControl sender, MapActualCameraChangingEventArgs args)
+        {
+            isCameraMoving = true;
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             controller = (Controller)e.Parameter;
@@ -88,7 +101,7 @@ namespace RunForestRun.View
 
         private async void Center_Click(object sender, RoutedEventArgs e)
         {
-            if (controller.currentPosition != null)
+            if (controller.currentPosition != null && !isCameraMoving)
             {
                 currentPosIcon.Location = controller.currentPosition.Point;
                 await map.TrySetViewAsync(controller.currentPosition.Point, 17);
@@ -132,8 +145,8 @@ namespace RunForestRun.View
                 });
                 if (controller.dataHandler.isRecording)
                 {
-
-                    await map.TrySetViewAsync(controller.currentPosition.Point, 17);
+                    if (!isCameraMoving)
+                        await map.TrySetViewAsync(controller.currentPosition.Point, 17);
 
                     if (controller.dataHandler.currentRoute.routePoints.Count >= 2)
                     {
@@ -253,6 +266,7 @@ namespace RunForestRun.View
                                         var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
                                         await dialog.ShowAsync();
                                     }
+                                    DataHandler.getDataHandler().routeToCompare = null;
                                     break;
                             }
                         break;
