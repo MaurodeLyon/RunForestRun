@@ -184,10 +184,10 @@ namespace RunForestRun.View
                                 StrokeDashed = false,
                                 ZIndex = 3
                             };
-
+                            List<Waypoint> secondList = new List<Waypoint>();
+                            secondList.AddRange(controller.dataHandler.currentRoute.routePoints);
                             List<BasicGeoposition> basicPositionList = new List<BasicGeoposition>();
-
-                            foreach (Waypoint item in controller.dataHandler.currentRoute.routePoints)
+                            foreach (Waypoint item in secondList)
                             {
                                 basicPositionList.Add(new BasicGeoposition() { Latitude = item.latitude, Longitude = item.longitude });
                             }
