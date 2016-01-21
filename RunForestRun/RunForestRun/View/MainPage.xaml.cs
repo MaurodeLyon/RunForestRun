@@ -1,4 +1,5 @@
-﻿using RunForestRun.Model;
+﻿using RunForestRun.Library;
+using RunForestRun.Model;
 using RunForestRun.View;
 using RunForestRun.ViewModel;
 using System;
@@ -49,7 +50,7 @@ namespace RunForestRun
             else if (Save.IsSelected)
             {
                 PageName.Text = "Load";
-                innerFrame.Navigate(typeof(Load), innerFrame);
+                innerFrame.Navigate(typeof(Load), new RouteInfoWrapper(innerFrame,controller));
             }
             else if (Compare.IsSelected)
             {

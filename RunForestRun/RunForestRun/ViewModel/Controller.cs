@@ -54,6 +54,69 @@ namespace RunForestRun.ViewModel
 
             }
         }
+        //the loggedTijd, loggedAfstand and loggedSnelheid attributes are used by the RouteInfo page. the Log attributes are used by the Compare page
+        public string loggedTijd
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.infoRoute.eindTijd - _dataHandler.infoRoute.beginTijd;
+                return t.ToString().Split('.')[0];
+            }
+        }
+        public string loggedAfstand
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.infoRoute.eindTijd - _dataHandler.infoRoute.beginTijd;
+
+                double afstand = t.TotalSeconds * double.Parse(loggedSnelheid);
+                afstand = afstand / 1000;
+                afstand = Math.Round(afstand, 2);
+                return afstand.ToString();
+            }
+        }
+        public string loggedSnelheid
+        {
+            get
+            {
+                double total = 0;
+                foreach (Waypoint wp in _dataHandler.infoRoute.routePoints)
+                    total += (double)wp.speed;
+                total = total / _dataHandler.infoRoute.routePoints.Count;
+                return Math.Round(total, 2).ToString();
+
+            }
+        }
+
+        public string logBeginTijd
+        {
+            get
+            {
+                return _dataHandler.infoRoute.beginTijd.ToString();
+            }
+        }
+
+        public string logMaxSnelheid
+        {
+            get
+            {
+                double max = 0;
+                foreach (Waypoint wp in _dataHandler.infoRoute.routePoints)
+                    if(max<wp.speed) max= (double)wp.speed;
+                return Math.Round(max, 2).ToString();
+            }
+        }
+
+        public string logMinSnelheid
+        {
+            get
+            {
+                double min = 0;
+                foreach (Waypoint wp in _dataHandler.infoRoute.routePoints)
+                    if (min > wp.speed) min = (double)wp.speed;
+                return Math.Round(min, 2).ToString();
+            }
+        }
         public string tijd
         {
             get { return _tijd; }
