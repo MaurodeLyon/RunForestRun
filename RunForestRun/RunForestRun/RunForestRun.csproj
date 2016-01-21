@@ -99,6 +99,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Library\FileIO.cs" />
+    <Compile Include="Library\pushnotification.cs" />
     <Compile Include="Library\Waypoint.cs" />
     <Compile Include="Model\DataHandler.cs" />
     <Compile Include="Library\Route.cs" />

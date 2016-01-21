@@ -37,6 +37,7 @@ namespace RunForestRun.View
         private MapIcon currentPosIcon;
         private Controller controller;
         private bool loggedRouteSetup;
+        private bool GeoFencingSetup;
 
         public GPS()
         {
@@ -47,7 +48,7 @@ namespace RunForestRun.View
             currentPosIcon.ZIndex = 4;
             map.MapElements.Add(currentPosIcon);
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            
+            GeoFencingSetup = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -55,62 +56,21 @@ namespace RunForestRun.View
             controller = (Controller)e.Parameter;
             controller.dataHandler.locator.PositionChanged += GeolocatorPositionChanged;
 
-            if(!controller.GeoFencingSetup)
+            if (!GeoFencingSetup)
             {
                 setupGeofencing();
-                controller.GeoFencingSetup = true;
+                GeoFencingSetup = true;
             }
 
-            if(controller.dataHandler.routeToCompare!=null && !loggedRouteSetup)
+            if (controller.dataHandler.routeToCompare != null && !loggedRouteSetup)
             {
                 drawLoggedRoute(controller.dataHandler.routeToCompare);
-                setupGeofences(controller.dataHandler.routeToCompare);
+                setupStartAndFinish(controller.dataHandler.routeToCompare);
                 loggedRouteSetup = true;
             }
         }
 
-        private void setupGeofences(Route route)
-        {
-            List<Waypoint> waypoints = route.routePoints;
-            List<BasicGeoposition> walkedPointList = new List<BasicGeoposition>();
-
-            foreach(Waypoint wp in waypoints)
-                walkedPointList.Add(wp.GeoPosition().Position);
-
-            Geopoint middle = waypoints[waypoints.Count / 2].GeoPosition();
-            BasicGeoposition first = walkedPointList.First();
-            BasicGeoposition last = walkedPointList.Last();
-
-            setupGeofence(first, "Start");
-            setupGeofence(last, "End");
-
-            addMapIcon(middle);
-
-        }
-
-        public void pushNot(string title, string desc)
-        {
-            ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
-
-            XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-            toastTextElements[0].AppendChild(toastXml.CreateTextNode(title));
-            toastTextElements[1].AppendChild(toastXml.CreateTextNode(desc));
-
-            IXmlNode toastNode = toastXml.SelectSingleNode("/toast");
-            XmlElement test = toastXml.CreateElement("test");
-
-            test.SetAttribute("src", "ms-winsoundevent:Notification.IM");
-
-            toastNode.AppendChild(test);
-
-            ToastNotification toast = new ToastNotification(toastXml);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
-        }
-
-    
-
-    private async void addMapIcon(Geopoint pos)
+        private async void addMapIcon(Geopoint pos)
         {
             MapIcon mapIcon = new MapIcon();
             mapIcon.Location = pos;
@@ -124,6 +84,7 @@ namespace RunForestRun.View
                 map.MapElements.Add(mapIcon);
             });
         }
+
         private async void Center_Click(object sender, RoutedEventArgs e)
         {
             if (controller.currentPosition != null)
@@ -202,134 +163,12 @@ namespace RunForestRun.View
 
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-               controller.loadInfoPage(); 
+                controller.loadInfoPage();
             });
-            
+
         }
 
-        private async void TestRoute_Click(object sender, RoutedEventArgs e)
-        {
-            const string beginLocation = "Geertruidenberg";
-            const string endLocation = "Breda";
-            //"Granville, Manche, Frankrijk";
-
-            MapLocationFinderResult result = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
-            MapLocation from = result.Locations.First();
-
-            result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
-            MapLocation to = result.Locations.First();
-
-            MapIcon mapIcon1 = new MapIcon();
-
-            mapIcon1.Location = new Geopoint(to.Point.Position);
-            mapIcon1.NormalizedAnchorPoint = new Point(0.5, 1.0);
-            mapIcon1.Title = "Lindelauf BV (Supported by Putin)";
-            mapIcon1.ZIndex = 4;
-            map.MapElements.Add(mapIcon1);
-
-            MapRouteFinderResult routeResult = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
-
-            MapRoute b = routeResult.Route;
-
-            var color = Colors.Green;
-            color.A = 128;
-
-            var line = new MapPolyline
-            {
-                StrokeThickness = 11,
-                StrokeColor = color,
-                StrokeDashed = false,
-                ZIndex = 2
-            };
-            line.Path = new Geopath(b.Path.Positions);
-            map.MapElements.Add(line);
-        }
-
-        /*private async void map_MapElementClick(MapControl sender, MapElementClickEventArgs args)
-        {
-            string test = "wtfman";
-            if (args.MapElements.First() is MapIcon)
-            {
-                MapIcon two = (MapIcon)args.MapElements.First();
-                test = two.Title;
-            }
-            var dialog = new Windows.UI.Popups.MessageDialog(
-                "Aliquam laoreet magna sit amet mauris iaculis ornare. " +
-                "Morbi iaculis augue vel elementum volutpat.",
-                "Lorem Ipsum" + test);
-            var result = await dialog.ShowAsync();
-        }*/
-
-        private async void TestGeoFence_Click(object sender, RoutedEventArgs e)
-        {
-            GeofenceMonitor.Current.Geofences.Clear();
-            Geolocator locator = new Geolocator();
-            var location = await locator.GetGeopositionAsync().AsTask();
-            Geofence fence = GeofenceMonitor.Current.Geofences.FirstOrDefault(gf => gf.Id == "currentLoc");
-
-            if (fence == null)
-            {
-                GeofenceMonitor.Current.Geofences.Add(
-                     new Geofence("currentLoc", new Geocircle(location.Coordinate.Point.Position, 10.0), MonitoredGeofenceStates.Entered,
-                                    false, TimeSpan.FromSeconds(10))
-                        );
-            }
-            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
-
-
-            const string beginLocation = "Lovensdijkstraat, Breda";
-            const string endLocation = "Hogeschoollaan,Breda";
-            //"Granville, Manche, Frankrijk";
-
-            MapLocationFinderResult result
-                = await MapLocationFinder.FindLocationsAsync(beginLocation, map.Center);
-            MapLocation from = result.Locations.First();
-
-            result = await MapLocationFinder.FindLocationsAsync(endLocation, map.Center);
-            MapLocation to = result.Locations.First();
-
-            MapRouteFinderResult routeResult
-                = await MapRouteFinder.GetDrivingRouteAsync(from.Point, to.Point);
-
-
-
-            MapRoute b = routeResult.Route;
-
-
-            var color = Colors.Turquoise;
-            //color.A = 128;
-
-            var line = new MapPolyline
-            {
-                StrokeThickness = 11,
-                StrokeColor = color,
-                StrokeDashed = false,
-                ZIndex = 2
-            };
-
-            line.Path = new Geopath(b.Path.Positions);
-
-            map.MapElements.Add(line);
-
-            Geocircle geocircle = new Geocircle(to.Point.Position, 10);
-            MonitoredGeofenceStates mask = MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited;
-
-            GeofenceMonitor.Current.Geofences.Add(new Geofence("to", geocircle, mask, false, new TimeSpan(0)));
-        }
-
-        private void setupGeofence(BasicGeoposition pos,String name)
-        {
-            Geofence fence = new Geofence(
-                name,
-                new Geocircle(pos, 18),
-                MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited,
-                false,
-                new TimeSpan(0));
-            if (!GeofenceMonitor.Current.Geofences.Contains(fence))
-                GeofenceMonitor.Current.Geofences.Add(fence);
-        }
-
-        public async void setupGeofencing()
+        private async void setupGeofencing()
         {
             GeofenceMonitor.Current.Geofences.Clear();
             if (await Geolocator.RequestAccessAsync() == GeolocationAccessStatus.Allowed)
@@ -349,55 +188,69 @@ namespace RunForestRun.View
             }
         }
 
+        private void setupStartAndFinish(Route route)
+        {
+            List<Waypoint> waypoints = new List<Waypoint>();
+            waypoints.AddRange(route.routePoints);
+            List<BasicGeoposition> walkedPointList = new List<BasicGeoposition>();
+            foreach (Waypoint wp in waypoints)
+                walkedPointList.Add(wp.GeoPosition().Position);
+
+            Geopoint middle = waypoints[waypoints.Count / 2].GeoPosition();
+            BasicGeoposition first = walkedPointList.First();
+            BasicGeoposition last = walkedPointList.Last();
+
+            setupGeofence(first, "Start");
+            setupGeofence(last, "End");
+
+            addMapIcon(middle);
+        }
+
+        private void setupGeofence(BasicGeoposition pos, string name)
+        {
+            Geofence fence = new Geofence(
+                name,
+                new Geocircle(pos, 1),
+                MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited,
+                false,
+                new TimeSpan(0));
+            if (!GeofenceMonitor.Current.Geofences.Contains(fence))
+                GeofenceMonitor.Current.Geofences.Add(fence);
+        }
+
         private void GeofenceStateChanged(GeofenceMonitor sender, object args)
         {
             var reports = sender.ReadReports();
-            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            //{
-                foreach (GeofenceStateChangeReport report in reports)
+            foreach (GeofenceStateChangeReport report in reports)
+            {
+                switch (report.NewState)
                 {
-                    GeofenceState state = report.NewState;
-                    Geofence geofence = report.Geofence;
-
-                    if (state == GeofenceState.Removed)
-                    {
-
-                    }
-
-                    else if (state == GeofenceState.Entered)
-                    {
-                        if (geofence.Id != "currentLoc")
-                        {
-                            //var dialog = new Windows.UI.Popups.MessageDialog(geofence.Id + "Entered");
-                            //var result = await dialog.ShowAsync();
-
-                            switch(geofence.Id)
+                    case GeofenceState.None:
+                        break;
+                    case GeofenceState.Entered:
+                        if (report.Geofence.Id != "currentLoc")
+                            switch (report.Geofence.Id)
                             {
                                 case "Start":
-                                    //var dialog = new Windows.UI.Popups.MessageDialog("You have reached the starting point of an earlier walked route on: " +
-                                        //controller.dataHandler.routeToCompare.beginTijd.ToString());
-                                   // var result = await dialog.ShowAsync();
-                                    pushNot("Start of logged route reached!", "You have reached the starting point of an earlier walked route on: " +
+                                    pushnotification.pushNot("Start of logged route reached!", "You have reached the starting point of an earlier walked route on: " +
                                         controller.dataHandler.routeToCompare.beginTijd.ToString());
+                                    controller.toggleRecording();
                                     break;
                                 case "End":
-                                    pushNot("End of logged route reached!", "You have reached the end of an earlier walked route on: " +
-                                        controller.dataHandler.routeToCompare.beginTijd.ToString());
+                                    pushnotification.pushNot("End of logged route reached!", "You have reached the end of an earlier walked route on: " +
+                                          controller.dataHandler.routeToCompare.beginTijd.ToString());
+                                    controller.toggleRecording();
                                     break;
-
                             }
-                        }
-
-
-                    }
-
-                    else if (state == GeofenceState.Exited)
-                    {
-
-                    }
+                        break;
+                    case GeofenceState.Exited:
+                        break;
+                    case GeofenceState.Removed:
+                        break;
+                    default:
+                        break;
                 }
-            //});
-
+            }
         }
     }
 }

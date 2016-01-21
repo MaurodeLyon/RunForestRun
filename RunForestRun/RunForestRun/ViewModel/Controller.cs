@@ -22,9 +22,7 @@ namespace RunForestRun.ViewModel
         private string _snelheid;
         private DataHandler _dataHandler;
 
-        public Boolean GeoFencingSetup = false;
-
-        public String logTijd
+        public string logTijd
         {
             get
             {
@@ -32,8 +30,7 @@ namespace RunForestRun.ViewModel
                 return t.ToString().Split('.')[0];
             }
         }
-
-        public String logAfstand
+        public string logAfstand
         {
             get
             {
@@ -45,8 +42,7 @@ namespace RunForestRun.ViewModel
                 return afstand.ToString();
             }
         }
-
-        public String logSnelheid
+        public string logSnelheid
         {
             get
             {
@@ -58,8 +54,6 @@ namespace RunForestRun.ViewModel
 
             }
         }
-
-
         public string tijd
         {
             get { return _tijd; }
@@ -80,6 +74,7 @@ namespace RunForestRun.ViewModel
         }
 
 
+        public Geocoordinate currentPosition;
         public string snelheid
         {
             get { return _snelheid; }
@@ -120,13 +115,11 @@ namespace RunForestRun.ViewModel
                     {
                         dataHandler.currentRoute.eindTijd = DateTime.Now;
                         dataHandler.manifest.Add(dataHandler.currentRoute);
-                        Library.FileIO.SaveManifest(dataHandler.manifest);
+                        FileIO.SaveManifest(dataHandler.manifest);
                     }
                     break;
             }
         }
-
-        public Geocoordinate currentPosition;
 
         private async void checkPosition()
         {
