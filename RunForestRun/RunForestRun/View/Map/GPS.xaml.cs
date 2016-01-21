@@ -42,6 +42,7 @@ namespace RunForestRun.View
 
         public GPS()
         {
+            DataHandler.getDataHandler().locator.StatusChanged += Locator_StatusChanged;
             this.InitializeComponent();
             currentPosIcon = new MapIcon();
             currentPosIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
@@ -50,6 +51,28 @@ namespace RunForestRun.View
             map.MapElements.Add(currentPosIcon);
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             GeoFencingSetup = false;
+        }
+
+        private async void Locator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
+        {
+            switch (sender.LocationStatus)
+            {
+                case PositionStatus.Ready:
+                    await map.TrySetViewAsync(controller.currentPosition.Point, 17);
+                    break;
+                case PositionStatus.Initializing:
+                    break;
+                case PositionStatus.NoData:
+                    break;
+                case PositionStatus.Disabled:
+                    break;
+                case PositionStatus.NotInitialized:
+                    break;
+                case PositionStatus.NotAvailable:
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -121,6 +144,7 @@ namespace RunForestRun.View
 
         }
 
+
         private async void GeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             if (controller.currentPosition != null)
@@ -186,7 +210,6 @@ namespace RunForestRun.View
 
                 GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
             }
-            await map.TrySetViewAsync(controller.currentPosition.Point, 17);
         }
 
         private void setupStartAndFinish(Route route)

@@ -102,7 +102,7 @@ namespace RunForestRun.ViewModel
             {
                 double max = 0;
                 foreach (Waypoint wp in _dataHandler.infoRoute.routePoints)
-                    if(max<wp.speed) max= (double)wp.speed;
+                    if (max < wp.speed) max = (double)wp.speed;
                 return Math.Round(max, 2).ToString();
             }
         }
@@ -164,6 +164,7 @@ namespace RunForestRun.ViewModel
             dataHandler.locator.PositionChanged += locationChanged;
             checkPosition();
         }
+        
 
         internal void toggleRecording()
         {
