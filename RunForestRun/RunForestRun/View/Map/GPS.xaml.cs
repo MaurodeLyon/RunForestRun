@@ -42,7 +42,6 @@ namespace RunForestRun.View
 
         public GPS()
         {
-            DataHandler.getDataHandler().locator.StatusChanged += Locator_StatusChanged;
             this.InitializeComponent();
             currentPosIcon = new MapIcon();
             currentPosIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
@@ -52,29 +51,7 @@ namespace RunForestRun.View
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             GeoFencingSetup = false;
         }
-
-        private async void Locator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
-        {
-            switch (sender.LocationStatus)
-            {
-                case PositionStatus.Ready:
-                    await map.TrySetViewAsync(controller.currentPosition.Point, 17);
-                    break;
-                case PositionStatus.Initializing:
-                    break;
-                case PositionStatus.NoData:
-                    break;
-                case PositionStatus.Disabled:
-                    break;
-                case PositionStatus.NotInitialized:
-                    break;
-                case PositionStatus.NotAvailable:
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             controller = (Controller)e.Parameter;
