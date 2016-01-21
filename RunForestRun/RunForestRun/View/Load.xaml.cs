@@ -1,4 +1,5 @@
-﻿using RunForestRun.Model;
+﻿using RunForestRun.Library;
+using RunForestRun.Model;
 using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace RunForestRun.View
     public sealed partial class Load : Page
     {
         private Frame innerFrame;
+        private Controller controller;
         public List<Route> RouteList;
         public ObservableCollection<string> selectableList = new ObservableCollection<string>();
 
@@ -41,14 +43,16 @@ namespace RunForestRun.View
                 if (route.beginTijd.ToString() == selectedList.ToString())
                 {
                     DataHandler.getDataHandler().infoRoute = route;
-                    innerFrame.Navigate(typeof(RouteInfo), route);
+                    innerFrame.Navigate(typeof(RouteInfo), controller);
                 }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            innerFrame = (Frame)e.Parameter;
+            RouteInfoWrapper wrap =(RouteInfoWrapper) e.Parameter;
+            innerFrame = wrap.frame;
+            controller = wrap.controller;
             DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
             RouteList = DataHandler.getDataHandler().manifest;
             foreach (Route item in RouteList)

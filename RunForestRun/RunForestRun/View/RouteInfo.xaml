@@ -16,24 +16,38 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Current Route" HorizontalAlignment="Center" FontSize="35"/>
+        <TextBlock Grid.Row="0" Text="Logged Route" HorizontalAlignment="Center" FontSize="35"/>
         <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" >
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
-                <TextBlock Text="{Binding afstand}" FontSize="25" Margin="5,20,0,0"/>
-                <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
+                <TextBlock Text="Distance:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding loggedAfstand}" FontSize="23" Margin="5,10,0,0"/>
+                <TextBlock Text="Km" FontSize="22" Margin="5,10,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Speed:" Margin="0,20,0,0" FontSize="25"/>
-                <TextBlock Text="{Binding snelheid}" FontSize="25" Margin="5,20,0,0"/>
-                <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
+                <TextBlock Text="Avg. Speed:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding loggedSnelheid}" FontSize="23" Margin="5,10,0,0"/>
+                <TextBlock Text="m/s" FontSize="22" Margin="5,10,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
-                <TextBlock Text="{Binding tijd}" FontSize="25" Margin="5,20,0,0"/>
+                <TextBlock Text="Min. Speed:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding logMinSnelheid}" FontSize="23" Margin="5,10,0,0"/>
+                <TextBlock Text="m/s" FontSize="22" Margin="5,10,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Max. Speed:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding logMaxSnelheid}" FontSize="23" Margin="5,10,0,0"/>
+                <TextBlock Text="m/s" FontSize="22" Margin="5,10,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Start time:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding logBeginTijd}" FontSize="15" Margin="5,15,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Time:" Margin="0,10,0,0" FontSize="23"/>
+                <TextBlock Text="{Binding loggedTijd}" FontSize="23" Margin="5,10,0,0"/>
             </StackPanel>
         </StackPanel>
-        <Maps:MapControl Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" ZoomInteractionMode="GestureAndControl" TiltInteractionMode="GestureAndControl"/>
+        <Maps:MapControl x:Name="map" Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" ZoomInteractionMode="GestureOnly"  TiltInteractionMode="GestureOnly"/>
 
     </Grid>
 </Page>
