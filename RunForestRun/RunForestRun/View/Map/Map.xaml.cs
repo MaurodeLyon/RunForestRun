@@ -32,7 +32,6 @@ namespace RunForestRun.View
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
-            Race.IsEnabled = false;
         }
 
         private void Kaart_Click(object sender, RoutedEventArgs e)
@@ -75,7 +74,8 @@ namespace RunForestRun.View
 
         private void Race_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Race), controller);
+            if (DataHandler.getDataHandler().routeToCompare != null)
+                mapFrame.Navigate(typeof(Race), controller);
         }
     }
 }

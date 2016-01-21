@@ -40,6 +40,7 @@ namespace RunForestRun.View
         private bool loggedRouteSetup;
         private bool GeoFencingSetup;
         private bool isCameraMoving;
+        private bool isEnRoute;
 
         public GPS()
         {
@@ -48,7 +49,6 @@ namespace RunForestRun.View
             currentPosIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
             currentPosIcon.Title = "Current position";
             currentPosIcon.ZIndex = 4;
-            map.MapElements.Add(currentPosIcon);
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             GeoFencingSetup = false;
             map.ActualCameraChanging += Map_ActualCameraChanging;
@@ -82,6 +82,8 @@ namespace RunForestRun.View
                 setupStartAndFinish(controller.dataHandler.routeToCompare);
                 loggedRouteSetup = true;
             }
+            map.MapElements.Clear();
+            map.MapElements.Add(currentPosIcon);
         }
 
         private async void addMapIcon(Geopoint pos)
@@ -204,6 +206,7 @@ namespace RunForestRun.View
 
         private void setupStartAndFinish(Route route)
         {
+            isEnRoute = false;
             List<Waypoint> waypoints = new List<Waypoint>();
             waypoints.AddRange(route.routePoints);
             List<BasicGeoposition> walkedPointList = new List<BasicGeoposition>();
@@ -231,7 +234,6 @@ namespace RunForestRun.View
             if (!GeofenceMonitor.Current.Geofences.Contains(fence))
                 GeofenceMonitor.Current.Geofences.Add(fence);
         }
-
         private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
         {
             var reports = sender.ReadReports();
@@ -246,27 +248,32 @@ namespace RunForestRun.View
                             switch (report.Geofence.Id)
                             {
                                 case "Start":
+                                    isEnRoute = true;
                                     pushnotification.pushNot("Start of logged route reached!", "You have reached the starting point of an earlier walked route on: " +
                                         controller.dataHandler.routeToCompare.beginTijd.ToString());
                                     controller.toggleRecording();
                                     break;
                                 case "End":
-                                    controller.toggleRecording();
-                                    var nieuweTijd = DataHandler.getDataHandler().currentRoute.eindTijd - DataHandler.getDataHandler().currentRoute.beginTijd;
-                                    var oudeTijd = DataHandler.getDataHandler().routeToCompare.eindTijd - DataHandler.getDataHandler().routeToCompare.beginTijd;
-                                    if (nieuweTijd < oudeTijd)
+                                    if (isEnRoute)
                                     {
-                                        pushnotification.pushNot("End of logged route reached!", "You were faster!!!");
-                                        var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
-                                        await dialog.ShowAsync();
+                                        isEnRoute = false;
+                                        controller.toggleRecording();
+                                        var nieuweTijd = DataHandler.getDataHandler().currentRoute.eindTijd - DataHandler.getDataHandler().currentRoute.beginTijd;
+                                        var oudeTijd = DataHandler.getDataHandler().routeToCompare.eindTijd - DataHandler.getDataHandler().routeToCompare.beginTijd;
+                                        if (nieuweTijd < oudeTijd)
+                                        {
+                                            pushnotification.pushNot("End of logged route reached!", "You were faster!!!");
+                                            var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
+                                            await dialog.ShowAsync();
+                                        }
+                                        else
+                                        {
+                                            pushnotification.pushNot("End of logged route reached!", "You were slower.");
+                                            var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
+                                            await dialog.ShowAsync();
+                                        }
+                                        DataHandler.getDataHandler().routeToCompare = null;
                                     }
-                                    else
-                                    {
-                                        pushnotification.pushNot("End of logged route reached!", "You were slower.");
-                                        var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
-                                        await dialog.ShowAsync();
-                                    }
-                                    DataHandler.getDataHandler().routeToCompare = null;
                                     break;
                             }
                         break;
