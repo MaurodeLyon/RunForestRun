@@ -58,7 +58,7 @@ namespace RunForestRun.View
                 controller = e.Parameter as Controller;
             }
             else {
-                DataHandler.getDataHandler().isWalking = false;
+                DataHandler.getDataHandler().isRecording = false;
             }
             if (controller.dataHandler.routeToCompare != null)
             {

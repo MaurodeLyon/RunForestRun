@@ -104,8 +104,8 @@ namespace RunForestRun.ViewModel
 
         internal void toggleRecording()
         {
-            dataHandler.isWalking = !dataHandler.isWalking;
-            switch (dataHandler.isWalking)
+            dataHandler.isRecording = !dataHandler.isRecording;
+            switch (dataHandler.isRecording)
             {
                 case true:
                     dataHandler.currentRoute = new Route();
@@ -116,6 +116,9 @@ namespace RunForestRun.ViewModel
                         dataHandler.currentRoute.eindTijd = DateTime.Now;
                         dataHandler.manifest.Add(dataHandler.currentRoute);
                         FileIO.SaveManifest(dataHandler.manifest);
+                        _snelheid = "0";
+                        _afstand = "0";
+                        _tijd = "0";
                     }
                     break;
             }
@@ -132,38 +135,41 @@ namespace RunForestRun.ViewModel
             Geoposition update = await dataHandler.locator.GetGeopositionAsync();
             currentPosition = update.Coordinate;
             //loadInfoPage();
-            if (dataHandler.isWalking)
+            if (dataHandler.isRecording)
                 recording();
         }
 
         public async void loadInfoPage()
         {
-            if (dataHandler.currentRoute.routePoints.Count >= 2)
+            if (dataHandler.isRecording)
             {
-                MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
-                afstand = Math.Round((routeResult.Route.LengthInMeters / 1000), 2).ToString();
+                //Distance
+                if (dataHandler.currentRoute.routePoints.Count >= 2)
+                {
+                    MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
+                    afstand = Math.Round((routeResult.Route.LengthInMeters / 1000), 2).ToString();
+                }
+                //Time
+                TimeSpan timespan = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
+                int hours = timespan.Hours;
+                int minutes = timespan.Minutes;
+                int seconds = timespan.Seconds;
+                string Hours, Minutes, Seconds;
+                if (hours < 10) Hours = "0" + hours;
+                else Hours = "" + hours;
+                if (minutes < 10) Minutes = "0" + minutes;
+                else Minutes = "" + minutes;
+                if (seconds < 10) Seconds = "0" + seconds;
+                else Seconds = "" + seconds;
+                tijd = Hours + ":" + Minutes + ":" + Seconds;
             }
-            TimeSpan test = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
-            int hours = test.Hours;
-            int minutes = test.Minutes;
-            int seconds = test.Seconds;
-            String Hours, Minutes, Seconds;
-            if (hours < 10)
-                Hours = "0" + hours;
-            else { Hours = "" + hours; }
-            if (minutes < 10)
-                Minutes = "0" + minutes;
-            else { Minutes = "" + minutes; }
-            if (seconds < 10)
-                Seconds = "0" + seconds;
-            else { Seconds = "" + seconds; }
+            //speed
             double speed = 0;
             if (currentPosition.Speed.HasValue)
             {
-                Double.TryParse(currentPosition.Speed.Value.ToString(), out speed);
+                double.TryParse(currentPosition.Speed.Value.ToString(), out speed);
                 speed = Math.Round(speed, 0);
             }
-            tijd = Hours + ":" + Minutes + ":" + Seconds;
             snelheid = speed.ToString();
         }
 
@@ -183,7 +189,6 @@ namespace RunForestRun.ViewModel
 
         private List<Geopoint> createGeoPointList()
         {
-            // TODO: createGeoPointList can give a InvalidOperationException at random moments. Needs fixing 
             List<Waypoint> secondList = new List<Waypoint>();
             secondList.AddRange(dataHandler.currentRoute.routePoints);
             List<Geopoint> toCreate = new List<Geopoint>();
