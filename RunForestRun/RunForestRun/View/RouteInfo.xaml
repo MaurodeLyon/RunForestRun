@@ -11,29 +11,29 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Orientation="Vertical" >
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top" >
-                <TextBlock Text="Current Route" HorizontalAlignment="Center" FontSize="35"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
-                    <TextBlock Text="{Binding afstand}" FontSize="25" Margin="5,20,0,0"/>
-                    <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Speed:" Margin="0,20,0,0" FontSize="25"/>
-                    <TextBlock Text="{Binding snelheid}" FontSize="25" Margin="5,20,0,0"/>
-                    <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
-                    <TextBlock Text="{Binding tijd}" FontSize="25" Margin="5,20,0,0"/>
-                </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Current Route" HorizontalAlignment="Center" FontSize="35"/>
+        <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
+                <TextBlock Text="{Binding afstand}" FontSize="25" Margin="5,20,0,0"/>
+                <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
             </StackPanel>
-
-            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Maps:MapControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" ZoomInteractionMode="GestureAndControl" TiltInteractionMode="GestureAndControl"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Speed:" Margin="0,20,0,0" FontSize="25"/>
+                <TextBlock Text="{Binding snelheid}" FontSize="25" Margin="5,20,0,0"/>
+                <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
             </StackPanel>
-
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
+                <TextBlock Text="{Binding tijd}" FontSize="25" Margin="5,20,0,0"/>
+            </StackPanel>
         </StackPanel>
+        <Maps:MapControl Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" ZoomInteractionMode="GestureAndControl" TiltInteractionMode="GestureAndControl"/>
+
     </Grid>
 </Page>
