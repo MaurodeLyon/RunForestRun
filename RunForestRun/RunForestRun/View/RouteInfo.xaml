@@ -1,25 +1,39 @@
 ﻿<Page
-    x:Class="RunForestRun.View.RouteInfo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RunForestRun.Library"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
+    xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
+    x:Class="RunForestRun.View.RouteInfo"
+    
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView ItemsSource="{x:Bind ViewModel.Waypoints}" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:Waypoint">
-                    <StackPanel>
-                        <TextBlock Text="{x:Bind latitude}"/>
-                        <TextBlock Text="{x:Bind longitude}"/>
-                        <TextBlock Text="{x:Bind speed}"/>
-                        <TextBlock Text="{x:Bind timestamp}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <StackPanel Orientation="Vertical" >
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top" >
+                <TextBlock Text="Current Route" HorizontalAlignment="Center" FontSize="35"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Distance:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding afstand}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="Km" FontSize="24" Margin="5,20,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Speed:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding snelheid}" FontSize="25" Margin="5,20,0,0"/>
+                    <TextBlock Text="m/s" FontSize="24" Margin="5,20,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Time:" Margin="0,20,0,0" FontSize="25"/>
+                    <TextBlock Text="{Binding tijd}" FontSize="25" Margin="5,20,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Maps:MapControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MapServiceToken="xdjvl604ZtZCe1wheFS2~o-Bye7QTed2nnchXiDa-tg~Atj9MHFiSWVh4rqldt52UTjuwLMeNMk-KCCylz2MsegVrhkl1D0Nv9fC5url55_g" ZoomInteractionMode="GestureAndControl" TiltInteractionMode="GestureAndControl"/>
+            </StackPanel>
+
+        </StackPanel>
     </Grid>
 </Page>

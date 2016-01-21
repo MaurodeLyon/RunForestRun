@@ -25,6 +25,8 @@ namespace RunForestRun.View
     public sealed partial class RouteInfo : Page
     {
         public RouteInfoViewModel ViewModel;
+        private Controller controller;
+
         public RouteInfo()
         {
             this.InitializeComponent();
@@ -34,6 +36,8 @@ namespace RunForestRun.View
        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            controller = e.Parameter as Controller;
+            DataContext = controller;
         }
     }
 }
