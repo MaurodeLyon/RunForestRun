@@ -54,7 +54,7 @@ namespace RunForestRun
             else if (Compare.IsSelected)
             {
                 PageName.Text = "Compare";
-                innerFrame.Navigate(typeof(Compare));
+                innerFrame.Navigate(typeof(Compare), innerFrame);
             }
         }
     }

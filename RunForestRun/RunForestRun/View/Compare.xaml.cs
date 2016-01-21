@@ -26,6 +26,7 @@ namespace RunForestRun.View
     {
         public List<Route> RouteList;
         public ObservableCollection<string> selectableList = new ObservableCollection<string>();
+        private Frame innerFrame;
 
         public Compare()
         {
@@ -39,11 +40,13 @@ namespace RunForestRun.View
             foreach (Route item in RouteList)
                 if (item.beginTijd.ToString() == selectedList.ToString())
                     DataHandler.getDataHandler().routeToCompare = item;
+            innerFrame.Navigate(typeof(Map));
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            innerFrame = e.Parameter as Frame;
             DataHandler.getDataHandler().manifest = await Library.FileIO.LoadManifest();
             RouteList = DataHandler.getDataHandler().manifest;
             foreach (Route item in RouteList)

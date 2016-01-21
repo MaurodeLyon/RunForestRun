@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 
 namespace RunForestRun.Library
 {
@@ -32,6 +33,15 @@ namespace RunForestRun.Library
         {
             get { return _timestamp; }
             set { _timestamp = value; }
+        }
+
+        public Geopoint GeoPosition()
+        {
+            return new Geopoint(new BasicGeoposition()
+            {
+                Longitude = longitude,
+                Latitude = latitude
+            });
         }
 
         public Waypoint(double latitude, double longitude, double? speed, DateTimeOffset timestamp)

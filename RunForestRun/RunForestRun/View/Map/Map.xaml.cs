@@ -1,4 +1,5 @@
-﻿using RunForestRun.ViewModel;
+﻿using RunForestRun.Model;
+using RunForestRun.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,16 +31,18 @@ namespace RunForestRun.View
         public Map()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+            Race.IsEnabled = false;
         }
 
         private void Kaart_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(GPS),controller);
+            mapFrame.Navigate(typeof(GPS), controller);
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            mapFrame.Navigate(typeof(Info),controller);
+            mapFrame.Navigate(typeof(Info), controller);
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
@@ -50,8 +53,28 @@ namespace RunForestRun.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            controller = e.Parameter as Controller;
+            if (e.Parameter != null)
+            {
+                controller = e.Parameter as Controller;
+            }
+            else {
+                DataHandler.getDataHandler().isWalking = false;
+            }
+            if (controller.dataHandler.routeToCompare != null)
+            {
+                Race.IsEnabled = true;
+            }
             mapFrame.Navigate(typeof(GPS), controller);
+        }
+
+        private void Info_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Race_Click(object sender, RoutedEventArgs e)
+        {
+            mapFrame.Navigate(typeof(Race), controller);
         }
     }
 }

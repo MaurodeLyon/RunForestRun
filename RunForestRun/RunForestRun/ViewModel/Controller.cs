@@ -22,6 +22,38 @@ namespace RunForestRun.ViewModel
         private string _snelheid;
         private DataHandler _dataHandler;
 
+        public string logTijd
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+                return t.ToString().Split('.')[0];
+            }
+        }
+        public string logAfstand
+        {
+            get
+            {
+                TimeSpan t = _dataHandler.routeToCompare.eindTijd - _dataHandler.routeToCompare.beginTijd;
+
+                double afstand = t.TotalSeconds * double.Parse(logSnelheid);
+                afstand = afstand / 1000;
+                afstand = Math.Round(afstand, 2);
+                return afstand.ToString();
+            }
+        }
+        public string logSnelheid
+        {
+            get
+            {
+                double total = 0;
+                foreach (Waypoint wp in _dataHandler.routeToCompare.routePoints)
+                    total += (double)wp.speed;
+                total = total / _dataHandler.routeToCompare.routePoints.Count;
+                return Math.Round(total, 2).ToString();
+
+            }
+        }
         public string tijd
         {
             get { return _tijd; }
@@ -40,6 +72,9 @@ namespace RunForestRun.ViewModel
                 this.OnPropertyChanged();
             }
         }
+
+
+        public Geocoordinate currentPosition;
         public string snelheid
         {
             get { return _snelheid; }
@@ -80,13 +115,11 @@ namespace RunForestRun.ViewModel
                     {
                         dataHandler.currentRoute.eindTijd = DateTime.Now;
                         dataHandler.manifest.Add(dataHandler.currentRoute);
-                        Library.FileIO.SaveManifest(dataHandler.manifest);
+                        FileIO.SaveManifest(dataHandler.manifest);
                     }
                     break;
             }
         }
-
-        public Geocoordinate currentPosition;
 
         private async void checkPosition()
         {
@@ -108,7 +141,7 @@ namespace RunForestRun.ViewModel
             if (dataHandler.currentRoute.routePoints.Count >= 2)
             {
                 MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
-                afstand = Math.Round((routeResult.Route.LengthInMeters / 1000),2).ToString();
+                afstand = Math.Round((routeResult.Route.LengthInMeters / 1000), 2).ToString();
             }
             TimeSpan test = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
             int hours = test.Hours;
@@ -127,7 +160,7 @@ namespace RunForestRun.ViewModel
             double speed = 0;
             if (currentPosition.Speed.HasValue)
             {
-                Double.TryParse(currentPosition.Speed.Value.ToString(),out speed);
+                Double.TryParse(currentPosition.Speed.Value.ToString(), out speed);
                 speed = Math.Round(speed, 0);
             }
             tijd = Hours + ":" + Minutes + ":" + Seconds;
@@ -150,8 +183,11 @@ namespace RunForestRun.ViewModel
 
         private List<Geopoint> createGeoPointList()
         {
+            // TODO: createGeoPointList can give a InvalidOperationException at random moments. Needs fixing 
+            List<Waypoint> secondList = new List<Waypoint>();
+            secondList.AddRange(dataHandler.currentRoute.routePoints);
             List<Geopoint> toCreate = new List<Geopoint>();
-            foreach (Waypoint w in dataHandler.currentRoute.routePoints)
+            foreach (Waypoint w in secondList)
             {
                 toCreate.Add(new Geopoint(new BasicGeoposition() { Longitude = w.longitude, Latitude = w.latitude }));
             }
