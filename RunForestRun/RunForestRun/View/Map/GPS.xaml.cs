@@ -16,6 +16,7 @@ using Windows.Services.Maps;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
@@ -91,7 +92,6 @@ namespace RunForestRun.View
             {
                 currentPosIcon.Location = controller.currentPosition.Point;
                 await map.TrySetViewAsync(controller.currentPosition.Point, 17);
-
             }
         }
 
@@ -129,7 +129,7 @@ namespace RunForestRun.View
                 {
                     currentPosIcon.Location = controller.currentPosition.Point;
                 });
-                if (controller.dataHandler.isWalking)
+                if (controller.dataHandler.isRecording)
                 {
 
                     await map.TrySetViewAsync(controller.currentPosition.Point, 17);
@@ -186,6 +186,7 @@ namespace RunForestRun.View
 
                 GeofenceMonitor.Current.GeofenceStateChanged += GeofenceStateChanged;
             }
+            await map.TrySetViewAsync(controller.currentPosition.Point, 17);
         }
 
         private void setupStartAndFinish(Route route)
@@ -218,7 +219,7 @@ namespace RunForestRun.View
                 GeofenceMonitor.Current.Geofences.Add(fence);
         }
 
-        private void GeofenceStateChanged(GeofenceMonitor sender, object args)
+        private async void GeofenceStateChanged(GeofenceMonitor sender, object args)
         {
             var reports = sender.ReadReports();
             foreach (GeofenceStateChangeReport report in reports)
@@ -237,9 +238,21 @@ namespace RunForestRun.View
                                     controller.toggleRecording();
                                     break;
                                 case "End":
-                                    pushnotification.pushNot("End of logged route reached!", "You have reached the end of an earlier walked route on: " +
-                                          controller.dataHandler.routeToCompare.beginTijd.ToString());
                                     controller.toggleRecording();
+                                    var nieuweTijd = DataHandler.getDataHandler().currentRoute.eindTijd - DataHandler.getDataHandler().currentRoute.beginTijd;
+                                    var oudeTijd = DataHandler.getDataHandler().routeToCompare.eindTijd - DataHandler.getDataHandler().routeToCompare.beginTijd;
+                                    if (nieuweTijd < oudeTijd)
+                                    {
+                                        pushnotification.pushNot("End of logged route reached!", "You were faster!!!");
+                                        var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
+                                        await dialog.ShowAsync();
+                                    }
+                                    else
+                                    {
+                                        pushnotification.pushNot("End of logged route reached!", "You were slower.");
+                                        var dialog = new MessageDialog("Old time: " + oudeTijd.ToString() + "\nNew time: " + nieuweTijd.ToString(), "End of logged route reached!");
+                                        await dialog.ShowAsync();
+                                    }
                                     break;
                             }
                         break;

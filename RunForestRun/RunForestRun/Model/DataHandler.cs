@@ -17,7 +17,7 @@ namespace RunForestRun.Model
         private bool _isWalking;
         private Route _routeToCompare;
         private Route _infoRoute;
-        
+
         public Geolocator locator
         {
             get { return _locator; }
@@ -33,7 +33,7 @@ namespace RunForestRun.Model
             get { return _currentRoute; }
             set { _currentRoute = value; }
         }
-        public bool isWalking
+        public bool isRecording
         {
             get { return _isWalking; }
             set { _isWalking = value; }
@@ -51,7 +51,11 @@ namespace RunForestRun.Model
 
         private DataHandler()
         {
-            _locator = new Geolocator();
+            _locator = new Geolocator()
+            {
+                DesiredAccuracy = PositionAccuracy.High,
+                ReportInterval = 500
+            };
             _currentRoute = new Route();
             _isWalking = false;
             loadManifest();
@@ -64,10 +68,7 @@ namespace RunForestRun.Model
 
         public static DataHandler getDataHandler()
         {
-            if (dataHandler == null)
-            {
-                dataHandler = new DataHandler();
-            }
+            if (dataHandler == null) dataHandler = new DataHandler();
             return dataHandler;
         }
     }
