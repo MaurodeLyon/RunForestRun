@@ -227,7 +227,7 @@ namespace RunForestRun.View
         {
             Geofence fence = new Geofence(
                 name,
-                new Geocircle(pos, 1),
+                new Geocircle(pos, 5),
                 MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Exited,
                 false,
                 new TimeSpan(0));
