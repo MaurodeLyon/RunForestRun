@@ -13,6 +13,7 @@ using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Services.Maps;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -49,10 +50,16 @@ namespace RunForestRun.View
             currentPosIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
             currentPosIcon.Title = "Current position";
             currentPosIcon.ZIndex = 4;
+            addImage();
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
             GeoFencingSetup = false;
             map.ActualCameraChanging += Map_ActualCameraChanging;
             map.ActualCameraChanged += Map_ActualCameraChanged;
+        }
+
+        private async void addImage()
+        {
+            currentPosIcon.Image = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/user_run.png"));
         }
 
         private void Map_ActualCameraChanged(MapControl sender, MapActualCameraChangedEventArgs args)
@@ -93,7 +100,7 @@ namespace RunForestRun.View
             mapIcon.NormalizedAnchorPoint = new Point(0.5, 1.0);
             mapIcon.Title = "Logged Route";
             mapIcon.ZIndex = 4;
-            //mapIcon.Image = await StorageFile.GetFileFromApplicationUriAsync(uri1);
+            mapIcon.Image = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/race-flag.png"));
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -170,7 +177,6 @@ namespace RunForestRun.View
                             }
 
                             walkedLine.Path = new Geopath(basicPositionList);
-
                             map.MapElements.Add(walkedLine);
                         });
                     }
