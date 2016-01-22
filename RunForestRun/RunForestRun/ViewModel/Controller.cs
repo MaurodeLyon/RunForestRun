@@ -164,7 +164,7 @@ namespace RunForestRun.ViewModel
             dataHandler.locator.PositionChanged += locationChanged;
             checkPosition();
         }
-        
+
 
         internal void toggleRecording()
         {
@@ -190,51 +190,64 @@ namespace RunForestRun.ViewModel
 
         private async void checkPosition()
         {
-            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
-            currentPosition = update.Coordinate;
+            var a = await Geolocator.RequestAccessAsync();
+            if (a == GeolocationAccessStatus.Allowed)
+            {
+                Geoposition update = await dataHandler.locator.GetGeopositionAsync();
+                currentPosition = update.Coordinate;
+            }
         }
 
         private async void locationChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            Geoposition update = await dataHandler.locator.GetGeopositionAsync();
-            currentPosition = update.Coordinate;
-            //loadInfoPage();
-            if (dataHandler.isRecording)
-                recording();
+            var a = await Geolocator.RequestAccessAsync();
+            if (a == GeolocationAccessStatus.Allowed)
+            {
+                Geoposition update = await dataHandler.locator.GetGeopositionAsync();
+                currentPosition = update.Coordinate;
+                //loadInfoPage();
+                if (dataHandler.isRecording)
+                    recording();
+            }
         }
 
         public async void loadInfoPage()
         {
-            if (dataHandler.isRecording)
+            if (currentPosition != null)
             {
-                //Distance
-                if (dataHandler.currentRoute.routePoints.Count >= 2)
+
+
+                if (dataHandler.isRecording)
                 {
-                    MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
-                    afstand = Math.Round((routeResult.Route.LengthInMeters / 1000), 2).ToString();
+                    //Distance
+                    if (dataHandler.currentRoute.routePoints.Count >= 2)
+                    {
+                        MapRouteFinderResult routeResult = await MapRouteFinder.GetWalkingRouteFromWaypointsAsync(createGeoPointList());
+                        afstand = Math.Round((routeResult.Route.LengthInMeters / 1000), 2).ToString();
+                    }
+                    //Time
+                    TimeSpan timespan = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
+                    int hours = timespan.Hours;
+                    int minutes = timespan.Minutes;
+                    int seconds = timespan.Seconds;
+                    string Hours, Minutes, Seconds;
+                    if (hours < 10) Hours = "0" + hours;
+                    else Hours = "" + hours;
+                    if (minutes < 10) Minutes = "0" + minutes;
+                    else Minutes = "" + minutes;
+                    if (seconds < 10) Seconds = "0" + seconds;
+                    else Seconds = "" + seconds;
+                    tijd = Hours + ":" + Minutes + ":" + Seconds;
                 }
-                //Time
-                TimeSpan timespan = (DateTime.Now.TimeOfDay - dataHandler.currentRoute.beginTijd.TimeOfDay);
-                int hours = timespan.Hours;
-                int minutes = timespan.Minutes;
-                int seconds = timespan.Seconds;
-                string Hours, Minutes, Seconds;
-                if (hours < 10) Hours = "0" + hours;
-                else Hours = "" + hours;
-                if (minutes < 10) Minutes = "0" + minutes;
-                else Minutes = "" + minutes;
-                if (seconds < 10) Seconds = "0" + seconds;
-                else Seconds = "" + seconds;
-                tijd = Hours + ":" + Minutes + ":" + Seconds;
+                //speed
+                double speed = 0;
+                if (currentPosition.Speed.HasValue)
+                {
+                    double.TryParse(currentPosition.Speed.Value.ToString(), out speed);
+                    speed = Math.Round(speed, 0);
+                }
+                snelheid = speed.ToString();
             }
-            //speed
-            double speed = 0;
-            if (currentPosition.Speed.HasValue)
-            {
-                double.TryParse(currentPosition.Speed.Value.ToString(), out speed);
-                speed = Math.Round(speed, 0);
-            }
-            snelheid = speed.ToString();
         }
 
         private void recording()
